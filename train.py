@@ -25,9 +25,11 @@ from hummingbird_env import ComplexHummingbird3DMatplotlibEnv
 class Complex3DMatplotlibTrainingCallback(BaseCallback):
     """Enhanced callback for 3D matplotlib environment training with comprehensive logging."""
     
-    def __init__(self, log_freq=1000, verbose=1):
+    def __init__(self, log_freq=1000, training_num=1, total_timesteps=500000, verbose=1):
         super().__init__(verbose)
         self.log_freq = log_freq
+        self.training_num = training_num  # Store training session number
+        self.total_timesteps = total_timesteps  # Store total timesteps for progress
         self.training_stats = {
             'episodes': 0,
             'total_rewards': [],
@@ -47,11 +49,11 @@ class Complex3DMatplotlibTrainingCallback(BaseCallback):
         self.current_episode_reward += self.locals.get('rewards', [0])[0]
         self.current_episode_length += 1
         
-        # Track episode statistics
+        # Track episode statistics - get the most recent nectar count
         if 'infos' in self.locals and len(self.locals['infos']) > 0:
             info = self.locals['infos'][0]
             if 'total_nectar_collected' in info:
-                self.episode_nectar = info['total_nectar_collected']
+                self.episode_nectar = info['total_nectar_collected']  # Always update to latest
             if 'altitude' in info:
                 self.episode_altitudes.append(info['altitude'])
         
@@ -62,8 +64,8 @@ class Complex3DMatplotlibTrainingCallback(BaseCallback):
             self.training_stats['episode_lengths'].append(self.current_episode_length)
             self.training_stats['nectar_collected'].append(self.episode_nectar)
             
-            # Survival rate (episodes longer than 50 steps considered "survival")
-            survival = 1 if self.current_episode_length >= 50 else 0
+            # Survival rate (episodes that reach 300 steps = success!)
+            survival = 1 if self.current_episode_length >= 300 else 0
             self.training_stats['survival_rates'].append(survival)
             
             # Altitude statistics
@@ -103,25 +105,11 @@ class Complex3DMatplotlibTrainingCallback(BaseCallback):
                 survival_rate = np.mean(recent_survival) * 100
                 avg_nectar = np.mean(recent_nectar)
                 
-                print(f"\n🐦 3D Matplotlib Training Stats (Step {self.num_timesteps}):")
-                print(f"   Episodes: {self.training_stats['episodes']}")
-                print(f"   Avg Reward (last {recent_episodes}): {avg_reward:.2f}")
-                print(f"   Avg Episode Length: {avg_length:.1f}")
-                print(f"   Survival Rate: {survival_rate:.1f}%")
-                print(f"   Avg Nectar Collected: {avg_nectar:.1f}")
-                
-                if self.training_stats['altitude_stats']:
-                    recent_altitude = self.training_stats['altitude_stats'][-recent_episodes:]
-                    avg_altitude = np.mean(recent_altitude)
-                    print(f"   Avg Flight Altitude: {avg_altitude:.2f}")
-                
-                # Crash reasons analysis
-                recent_crashes = self.training_stats['crash_reasons'][-recent_episodes:]
-                if recent_crashes:
-                    energy_crashes = recent_crashes.count('energy_depletion')
-                    ground_crashes = recent_crashes.count('ground_crash')
-                    time_limits = recent_crashes.count('time_limit')
-                    print(f"   Crash Analysis: Energy {energy_crashes}, Ground {ground_crashes}, Time {time_limits}")
+                # Simple progress indicator with training session number and progress
+                progress_percent = (self.num_timesteps / self.total_timesteps) * 100
+                progress_bar = "█" * int(progress_percent // 5) + "░" * (20 - int(progress_percent // 5))
+                print(f"🐦 Training #{self.training_num} | Step {self.num_timesteps:,} [{progress_bar}] {progress_percent:.0f}%")
+                print(f"   📊 Reward {avg_reward:.1f} | Nectar {avg_nectar:.1f} | Survival {survival_rate:.0f}%")
         
         return True
 
@@ -137,33 +125,68 @@ def create_3d_matplotlib_env():
     )
 
 
-def train_complex_3d_matplotlib_ppo(timesteps=500000, model_name="complex_3d_matplotlib_hummingbird_ppo"):
+def get_next_training_number():
+    """Get the next training session number by checking existing models."""
+    models_dir = "models"
+    if not os.path.exists(models_dir):
+        return 1
+    
+    # Look for existing training sessions
+    existing_models = [f for f in os.listdir(models_dir) if f.endswith('.zip')]
+    training_numbers = []
+    
+    for model in existing_models:
+        # Extract training numbers from filenames like "training_5_500k.zip"
+        if 'training_' in model:
+            try:
+                parts = model.split('_')
+                if len(parts) >= 2:
+                    num = int(parts[1])
+                    training_numbers.append(num)
+            except ValueError:
+                continue
+    
+    return max(training_numbers) + 1 if training_numbers else 1
+
+
+def train_complex_3d_matplotlib_ppo(timesteps=500000, model_name=None):
     """Train PPO on the 3D matplotlib complex hummingbird environment."""
     
-    print("🐦 Starting 3D Matplotlib Complex Hummingbird PPO Training...")
-    print(f"Training for {timesteps:,} timesteps")
+    # Generate training session info
+    training_num = get_next_training_number()
+    timesteps_label = f"{timesteps//1000}k" if timesteps >= 1000 else str(timesteps)
+    
+    if model_name is None:
+        model_name = f"training_{training_num}_{timesteps_label}"
+    
+    print("🐦 3D HUMMINGBIRD TRAINING SESSION")
+    print("=" * 40)
+    print(f"📋 Training Session: #{training_num}")
+    print(f"🎯 Target Timesteps: {timesteps:,}")
+    print(f"💾 Model Name: {model_name}")
+    print("=" * 40)
     
     # Create vectorized training environment (multiple parallel envs for faster training)
-    n_envs = 4
-    env = make_vec_env(create_3d_matplotlib_env, n_envs=n_envs, vec_env_cls=DummyVecEnv)
+    n_envs = 16  # Increased from 4 to 8 for faster training
+    env = make_vec_env(create_3d_matplotlib_env, n_envs=n_envs, vec_env_cls=SubprocVecEnv)  # SubprocVecEnv for true parallelism
     
     # Create evaluation environment (single env for consistent evaluation)
     eval_env = Monitor(create_3d_matplotlib_env())
     
-    # PPO hyperparameters optimized for 3D complex environment
+    # PPO hyperparameters optimized for 3D complex environment with memory learning
     model = PPO(
         "MultiInputPolicy",  # Required for Dict observation spaces
         env,
-        learning_rate=3e-4,
+        learning_rate=5e-4,  # Increased from 3e-4 for faster memory learning
         n_steps=2048 // n_envs,  # Adjust for multiple environments
-        batch_size=128,
-        n_epochs=10,
+        batch_size=256,  # Increased from 128 for better gradient estimates
+        n_epochs=15,  # Increased from 10 for more thorough learning
         gamma=0.99,
         gae_lambda=0.95,
         clip_range=0.2,
         clip_range_vf=None,
         normalize_advantage=True,
-        ent_coef=0.01,  # Encourage exploration in 3D space
+        ent_coef=0.02,  # Increased exploration in 3D space with memory
         vf_coef=0.5,
         max_grad_norm=0.5,
         use_sde=False,
@@ -171,17 +194,21 @@ def train_complex_3d_matplotlib_ppo(timesteps=500000, model_name="complex_3d_mat
         target_kl=None,
         tensorboard_log="./logs/",
         policy_kwargs=dict(
-            net_arch=dict(pi=[256, 256, 128], vf=[256, 256, 128]),  # Larger networks for 3D complexity
+            net_arch=dict(pi=[512, 256, 128], vf=[512, 256, 128]),  # Larger networks for memory processing
             activation_fn=nn.Tanh  # Use PyTorch activation function
         ),
-        verbose=1
+        verbose=0  # Reduce verbosity - no detailed logs
     )
     
     print(f"Model created with MultiInputPolicy for 3D Dict observation space")
     print(f"Using {n_envs} parallel environments for training")
     
     # Set up callbacks
-    training_callback = Complex3DMatplotlibTrainingCallback(log_freq=5000)
+    training_callback = Complex3DMatplotlibTrainingCallback(
+        log_freq=25000, 
+        training_num=training_num, 
+        total_timesteps=timesteps
+    )
     
     eval_callback = EvalCallback(
         eval_env,
@@ -334,7 +361,7 @@ def create_training_analysis_plots(stats, model_name):
     plt.show()
 
 
-def test_trained_model_3d_matplotlib(model_path, num_episodes=3, render=True):
+def test_trained_model_3d_matplotlib(model_path, num_episodes=10, render=True):
     """Test a trained model in the 3D matplotlib environment."""
     
     print(f"🐦 Testing trained 3D matplotlib model: {model_path}")
@@ -366,8 +393,8 @@ def test_trained_model_3d_matplotlib(model_path, num_episodes=3, render=True):
         truncated = False
         
         while not (terminated or truncated):
-            # Get action from trained model
-            action, _states = model.predict(obs, deterministic=True)
+            # Get action from trained model (use stochastic like in training)
+            action, _states = model.predict(obs, deterministic=False)  # Changed to False
             obs, reward, terminated, truncated, info = env.step(action)
             
             episode_reward += reward
@@ -411,6 +438,133 @@ def test_trained_model_3d_matplotlib(model_path, num_episodes=3, render=True):
     return episode_rewards, episode_lengths, nectar_totals
 
 
+def evaluate_model_comprehensive(model_path, num_episodes=20, render=False):
+    """Comprehensive evaluation of a model with detailed statistics and no rendering."""
+    
+    print(f"🔍 Comprehensive Evaluation: {model_path}")
+    print(f"Running {num_episodes} episodes for detailed statistics...")
+    
+    # Load the model
+    model = PPO.load(model_path)
+    
+    # Create test environment without rendering for faster evaluation
+    env = ComplexHummingbird3DMatplotlibEnv(
+        grid_size=10,
+        num_flowers=5,
+        max_energy=100,
+        max_height=8,
+        render_mode=None  # No rendering for comprehensive eval
+    )
+    
+    episode_rewards = []
+    episode_lengths = []
+    nectar_totals = []
+    final_energies = []
+    survival_count = 0
+    
+    for episode in range(num_episodes):
+        obs, info = env.reset()
+        episode_reward = 0
+        step_count = 0
+        
+        terminated = False
+        truncated = False
+        
+        while not (terminated or truncated):
+            # Get action from trained model (stochastic like training)
+            action, _states = model.predict(obs, deterministic=False)
+            obs, reward, terminated, truncated, info = env.step(action)
+            
+            episode_reward += reward
+            step_count += 1
+        
+        episode_rewards.append(episode_reward)
+        episode_lengths.append(step_count)
+        nectar_totals.append(info['total_nectar_collected'])
+        final_energies.append(info['energy'])
+        
+        if not terminated:  # Survived to time limit
+            survival_count += 1
+        
+        # Brief progress indicator
+        if (episode + 1) % 5 == 0:
+            print(f"  Episodes {episode + 1}/{num_episodes} completed...")
+    
+    env.close()
+    
+    # Comprehensive statistics
+    print(f"\n📊 COMPREHENSIVE EVALUATION RESULTS")
+    print("=" * 50)
+    print(f"Model: {model_path}")
+    print(f"Episodes: {num_episodes}")
+    print("-" * 50)
+    print(f"🏆 Average Reward: {np.mean(episode_rewards):.2f} ± {np.std(episode_rewards):.2f}")
+    print(f"🌸 Average Nectar: {np.mean(nectar_totals):.1f} ± {np.std(nectar_totals):.1f}")
+    print(f"⏱️  Average Length: {np.mean(episode_lengths):.1f} ± {np.std(episode_lengths):.1f}")
+    print(f"🔋 Average Final Energy: {np.mean(final_energies):.1f} ± {np.std(final_energies):.1f}")
+    print(f"💪 Survival Rate: {(survival_count / num_episodes) * 100:.1f}% ({survival_count}/{num_episodes})")
+    print("-" * 50)
+    print(f"📈 Best Episode Reward: {np.max(episode_rewards):.2f}")
+    print(f"📉 Worst Episode Reward: {np.min(episode_rewards):.2f}")
+    print(f"🌸 Max Nectar Collected: {np.max(nectar_totals):.1f}")
+    print(f"⏱️  Longest Survival: {np.max(episode_lengths)} steps")
+    print("=" * 50)
+    
+    return episode_rewards, episode_lengths, nectar_totals, survival_count
+
+
+def evaluate_all_models():
+    """Evaluate all available models and compare their performance."""
+    
+    print("🔍 EVALUATING ALL MODELS")
+    print("=" * 50)
+    
+    models_dir = "models"
+    if not os.path.exists(models_dir):
+        print("No models directory found.")
+        return
+    
+    model_files = [f for f in os.listdir(models_dir) if f.endswith('.zip')]
+    if not model_files:
+        print("No trained models found.")
+        return
+    
+    results = {}
+    
+    for model_file in model_files:
+        model_path = f"./models/{model_file}"
+        print(f"\n🤖 Evaluating: {model_file}")
+        
+        try:
+            rewards, lengths, nectars, survival_count = evaluate_model_comprehensive(model_path, num_episodes=10, render=False)
+            
+            results[model_file] = {
+                'avg_reward': np.mean(rewards),
+                'avg_nectar': np.mean(nectars),
+                'avg_length': np.mean(lengths),
+                'survival_rate': (survival_count / len(lengths)) * 100
+            }
+        except Exception as e:
+            print(f"❌ Failed to evaluate {model_file}: {e}")
+            continue
+    
+    # Summary comparison
+    print(f"\n🏆 MODEL COMPARISON SUMMARY")
+    print("=" * 80)
+    print(f"{'Model':<35} {'Reward':<10} {'Nectar':<10} {'Length':<10} {'Survival':<10}")
+    print("-" * 80)
+    
+    # Sort by average reward
+    for model, stats in sorted(results.items(), key=lambda x: x[1]['avg_reward'], reverse=True):
+        print(f"{model[:34]:<35} {stats['avg_reward']:<10.1f} {stats['avg_nectar']:<10.1f} {stats['avg_length']:<10.1f} {stats['survival_rate']:<10.1f}%")
+    
+    print("=" * 80)
+    
+    if results:
+        best_model = max(results.items(), key=lambda x: x[1]['avg_reward'])
+        print(f"🥇 Best performing model: {best_model[0]} (Reward: {best_model[1]['avg_reward']:.1f})")
+
+
 def main():
     """Main training script for 3D matplotlib environment."""
     if len(sys.argv) < 2:
@@ -418,8 +572,11 @@ def main():
         print("Actions:")
         print("  1 - Train new model (500K timesteps)")
         print("  2 - Train new model (1M timesteps)")
-        print("  3 - Test best model")
+        print("  custom <timesteps> - Train new model (custom timesteps)")
+        print("  3 - Test best model (3 episodes, with visualization)")
         print("  4 - Test specific model (provide path)")
+        print("  5 - Comprehensive evaluation (20 episodes, no visualization)")
+        print("  6 - Evaluate all models and compare")
         return
     
     action = sys.argv[1]
@@ -432,6 +589,20 @@ def main():
         train_complex_3d_matplotlib_ppo(timesteps=500000)
     elif action == "2":
         train_complex_3d_matplotlib_ppo(timesteps=1000000)
+    elif action == "custom":
+        if len(sys.argv) < 3:
+            print("Please provide custom timesteps number")
+            return
+        try:
+            custom_timesteps = int(sys.argv[2])
+            if custom_timesteps <= 0:
+                print("Error: Timesteps must be a positive number")
+                return
+            print(f"🎛️ Starting custom training with {custom_timesteps:,} timesteps...")
+            train_complex_3d_matplotlib_ppo(timesteps=custom_timesteps)
+        except ValueError:
+            print("Error: Invalid timesteps number. Please provide a valid integer.")
+            return
     elif action == "3":
         test_trained_model_3d_matplotlib("./models/best_model", render=True)
     elif action == "4":
@@ -440,8 +611,16 @@ def main():
             return
         model_path = sys.argv[2]
         test_trained_model_3d_matplotlib(model_path, render=True)
+    elif action == "5":
+        if len(sys.argv) < 3:
+            print("Please provide model path")
+            return
+        model_path = sys.argv[2]
+        evaluate_model_comprehensive(model_path, num_episodes=20, render=False)
+    elif action == "6":
+        evaluate_all_models()
     else:
-        print("Invalid action. Use 1, 2, 3, or 4.")
+        print("Invalid action. Use 1, 2, custom, 3, 4, 5, or 6.")
 
 
 if __name__ == "__main__":
