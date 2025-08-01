@@ -34,7 +34,7 @@ class ComplexHummingbird3DMatplotlibEnv(gym.Env):
         
         self.METABOLIC_COST = 0.2           # Reduced from 0.3
         self.MOVE_HORIZONTAL_COST = 0.8     # Reduced from 1.2  
-        self.MOVE_UP_ENERGY_COST = 1.8      # Reduced from 2.5
+        self.MOVE_UP_ENERGY_COST = 1.2      # Further reduced from 1.8 to 1.2 for better upper region access
         self.MOVE_DOWN_ENERGY_COST = 0.5    # Reduced from 0.8
         self.HOVER_ENERGY_COST = 2.2        # Reduced from 3.0
                 
@@ -47,16 +47,14 @@ class ComplexHummingbird3DMatplotlibEnv(gym.Env):
         
         # Memory and learning bonuses
         self.FLOWER_VISIT_BONUS = 15       
-        self.EXPLORATION_BONUS = 2         
-        self.EFFICIENCY_BONUS = 10         
-        self.PROXIMITY_REWARD_SCALE = 0.5  
+        # Removed engineered reward constants for autonomous learning  
         
         # Observation space
         self.observation_space = spaces.Dict({
             'agent': spaces.Box(
-                low=np.array([0, 0, 0, 0, 0, 0, 0]), 
-                high=np.array([grid_size-1, grid_size-1, max_height, max_energy, 1, 10, 1]), 
-                shape=(7,), 
+                low=np.array([0, 0, 0, 0]), 
+                high=np.array([grid_size-1, grid_size-1, max_height, max_energy]), 
+                shape=(4,), 
                 dtype=np.float32
             ),
             'flowers': spaces.Box(
@@ -81,7 +79,7 @@ class ComplexHummingbird3DMatplotlibEnv(gym.Env):
         
         # NEW: Memory assistance variables
         self.last_flower_position = None   # Remember last flower location
-        self.visited_positions = set()     # Track explored areas
+        # Removed tracking variables for engineered rewards
         self.flowers_found_this_episode = 0
         
         # NEW: Real-time reward tracking for visualization
@@ -107,11 +105,11 @@ class ComplexHummingbird3DMatplotlibEnv(gym.Env):
         """Reset the environment."""
         super().reset(seed=seed)
         
-        # Reset agent
+        # Reset agent - keep original height for optimal access to all regions
         self.agent_pos = np.array([
             self.grid_size // 2, 
             self.grid_size // 2, 
-            self.max_height // 2
+            self.max_height // 2  # Height 4 - optimal for reaching both low and high regions
         ], dtype=np.float32)
         self.agent_energy = float(self.max_energy)
         
@@ -126,7 +124,7 @@ class ComplexHummingbird3DMatplotlibEnv(gym.Env):
         
         # NEW: Reset memory tracking
         self.last_flower_position = None
-        self.visited_positions = set()
+        # Removed tracking reset for autonomous learning
         self.flowers_found_this_episode = 0
         self.prev_dist_to_flower = float('inf')  # Initialize distance tracking
         
@@ -152,22 +150,29 @@ class ComplexHummingbird3DMatplotlibEnv(gym.Env):
         
         # Define 3D grid regions for balanced distribution
         regions = self._create_distribution_regions()
-        flowers_per_region = max(1, self.num_flowers // len(regions))
+        
+        # NEW: Randomize region order for balanced distribution
+        region_indices = list(range(len(regions)))
+        self.np_random.shuffle(region_indices)  # Randomize the order
+        
+        # Calculate target flowers per region more fairly
+        flowers_per_region = self.num_flowers // len(regions)  # Base amount (0 for 5 flowers, 8 regions)
+        extra_flowers = self.num_flowers % len(regions)        # Remaining flowers (5 for 5 flowers, 8 regions)
         
         total_flowers_placed = 0
         
-        for region_idx, region in enumerate(regions):
+        for i, region_idx in enumerate(region_indices):
+            region = regions[region_idx]
+            
             # Stop if we've placed enough flowers
             if total_flowers_placed >= self.num_flowers:
                 break
                 
-            target_flowers = flowers_per_region
-            # Distribute remaining flowers to first few regions
-            if region_idx < (self.num_flowers % len(regions)):
-                target_flowers += 1
+            # First 'extra_flowers' regions get 1 flower each, others get 0
+            target_flowers = 1 if i < extra_flowers else 0
             
-            # Don't exceed total flower count
-            target_flowers = min(target_flowers, self.num_flowers - total_flowers_placed)
+            if target_flowers == 0:
+                continue  # Skip regions that don't get flowers in this distribution
                 
             region_flowers = 0
             attempts = 0
@@ -289,52 +294,31 @@ class ComplexHummingbird3DMatplotlibEnv(gym.Env):
         # Calculate 3D Manhattan distance (approximates energy cost)
         manhattan_dist = np.sum(np.abs(flower_pos - self.agent_pos))
         
-        # Estimate energy cost for travel
+        # Estimate energy cost for travel with proper up/down movement costs
         # Horizontal movement costs less than vertical
         horizontal_dist = np.sum(np.abs(flower_pos[:2] - self.agent_pos[:2]))
         vertical_dist = abs(flower_pos[2] - self.agent_pos[2])
         
+        # Use appropriate vertical cost based on movement direction
+        if flower_pos[2] > self.agent_pos[2]:
+            # Moving upward - more expensive
+            vertical_cost = vertical_dist * self.MOVE_UP_ENERGY_COST
+        else:
+            # Moving downward - less expensive
+            vertical_cost = vertical_dist * self.MOVE_DOWN_ENERGY_COST
+        
         estimated_cost = (horizontal_dist * self.MOVE_HORIZONTAL_COST + 
-                         vertical_dist * self.MOVE_UP_ENERGY_COST +  # Assume upward movement (worst case)
+                         vertical_cost +  # Now uses proper up/down costs
                          manhattan_dist * self.METABOLIC_COST)  # Metabolic cost per step
         
-        # Add safety margin (50% extra energy requirement)
-        safety_margin = 1.5
+        # Reduced safety margin for better upper region accessibility
+        safety_margin = 1.0  # Further reduced from 1.2 to 1.0
         required_energy = estimated_cost * safety_margin
         
-        # Also consider return trip to other flowers (basic connectivity)
-        max_reasonable_distance = self.max_energy * 0.6  # Use 60% of max energy for single trip
+        # More generous energy allowance for flower accessibility
+        max_reasonable_distance = self.max_energy * 0.8  # Further increased from 0.75 to 0.8
         
         return required_energy <= max_reasonable_distance
-
-    def get_action_cost(self, action):
-        """Get the energy cost for a specific action (for agent planning)."""
-        base_cost = self.METABOLIC_COST
-        
-        if action == 0 or action == 1 or action == 2 or action == 3:  # Horizontal movement
-            return base_cost + self.MOVE_HORIZONTAL_COST
-        elif action == 4:  # Up
-            return base_cost + self.MOVE_UP_ENERGY_COST
-        elif action == 5:  # Down
-            return base_cost + self.MOVE_DOWN_ENERGY_COST
-        elif action == 6:  # Hover
-            return base_cost + self.HOVER_ENERGY_COST
-        else:
-            return base_cost
-
-    def get_efficiency_score(self):
-        """Calculate current energy efficiency score."""
-        if self.steps_taken == 0:
-            return 1.0
-        
-        energy_used = self.max_energy - self.agent_energy
-        nectar_collected = self.total_nectar_collected
-        
-        # Efficiency = nectar gained per energy spent
-        if energy_used > 0:
-            return nectar_collected / energy_used
-        else:
-            return nectar_collected  # No energy used yet
 
     def step(self, action):
         """Execute one step in 3D space."""
@@ -421,149 +405,36 @@ class ComplexHummingbird3DMatplotlibEnv(gym.Env):
                     
                     # Gain energy and reward
                     self.agent_energy = min(self.max_energy, self.agent_energy + nectar_collected)
-                    
-                    # Store previous total for milestone checking
-                    previous_total = self.total_nectar_collected
+                    # CORE OBJECTIVE: Nectar collection (the only guidance allowed)
                     self.total_nectar_collected += nectar_collected
-                    reward += nectar_collected
-                    
-                    # NEW: Progressive milestone bonuses - check if we crossed any thresholds
-                    nectar_milestones = [25, 50, 75, 100, 125, 150, 175, 200, 250, 300]
-                    milestone_rewards = [5, 10, 15, 20, 25, 30, 35, 40, 50, 75]
-                    
-                    for milestone, bonus in zip(nectar_milestones, milestone_rewards):
-                        if (self.total_nectar_collected >= milestone and previous_total < milestone):
-                            reward += bonus
-                            # Small celebration message for debugging
-                            if hasattr(self, '_debug_mode') and self._debug_mode:
-                                print(f"🎉 Milestone reached: {milestone} nectar! Bonus: +{bonus}")
-                    
-                    # Enhanced exploration and memory rewards
-                    if on_flower_idx != self.last_flower_visited:
-                        reward += self.FLOWER_VISIT_BONUS  # New flower bonus
-                        self.last_flower_visited = on_flower_idx
-                        
-                        # Track this flower position for memory
-                        flower_pos = self.flowers[on_flower_idx, :3]
-                        self.last_flower_position = flower_pos.copy()
-                        self.flowers_found_this_episode += 1
-                        
-                        # Efficiency bonus for finding multiple flowers quickly
-                        if self.flowers_found_this_episode >= 2:
-                            reward += self.EFFICIENCY_BONUS
-                    else:
-                        # Reduced penalty for same flower (sometimes necessary)
-                        reward -= 1
+                    reward += nectar_collected  # Direct reward for nectar collection
                 else:
-                    # ENHANCED: Higher penalty for visiting empty flowers (agent has this information now!)
-                    reward -= 8  # Increased penalty - agent should have known from observation
+                    # Removed penalties for empty flowers - agent must learn this autonomously
                     if hasattr(self, '_debug_mode') and self._debug_mode:
-                        print(f"❌ Visited empty flower! Agent should have known from observation.")
+                        # Optional debug message
+                        if hasattr(self, '_debug_mode') and self._debug_mode:
+                            print(f"❌ Visited empty flower! Agent must learn from experience.")
             else:
-                # ENHANCED: Higher penalty for trying to use flower in cooldown (agent has this information now!)
-                reward -= 12  # Increased penalty - agent has cooldown info in observation
+                # Agent must learn from consequences - no explicit penalty teaching
                 if hasattr(self, '_debug_mode') and self._debug_mode:
                     cooldown_remaining = self.flower_cooldowns[on_flower_idx]
                     print(f"❌ Visited flower on cooldown! Remaining: {cooldown_remaining} steps")
         
-        # Update flower cooldowns
+        # Update flower cooldowns and regenerate nectar
         self.flower_cooldowns = np.maximum(0, self.flower_cooldowns - 1)
-        
-        # Add efficiency bonus for smart flower selection
-        efficiency_bonus = self._calculate_efficiency_bonus()
-        reward += efficiency_bonus
-        
-        # Regenerate nectar
         self._regenerate_nectar()
         
-        # Memory-based proximity rewards to help with navigation
-        if self.last_flower_position is not None:
-            # Calculate distance to last known flower
-            dist_to_last_flower = np.linalg.norm(self.agent_pos - self.last_flower_position)
-            
-            # Reward for moving towards the last flower (gradient-based guidance)
-            if hasattr(self, 'prev_dist_to_flower'):
-                if dist_to_last_flower < self.prev_dist_to_flower:
-                    reward += 0.5  # Small reward for getting closer
-                elif dist_to_last_flower > self.prev_dist_to_flower:
-                    reward -= 0.2  # Small penalty for moving away
-            
-            self.prev_dist_to_flower = dist_to_last_flower
-            
-            # Additional proximity bonus when very close to remembered flower
-            if dist_to_last_flower < 3.0:
-                reward += 1.0
+        # =============================================================
+        # AUTONOMOUS LEARNING: NO PROXIMITY GUIDANCE
+        # =============================================================
+        # Removed all proximity rewards - agent must discover flower locations autonomously
         
-        # NEW: Proximity reward to ALL available flowers (continuous learning signal)
-        available_flowers = []
-        for i, flower in enumerate(self.flowers):
-            # Only consider flowers that are active and have nectar
-            if self.flower_cooldowns[i] == 0 and flower[3] > 0:
-                distance = np.linalg.norm(self.agent_pos - flower[:3])
-                available_flowers.append(distance)
+        # Removed exploration bonus - agent must develop own exploration strategy
         
-        if available_flowers:
-            # Reward based on proximity to nearest available flower
-            nearest_flower_distance = min(available_flowers)
-            proximity_reward = self.PROXIMITY_REWARD_SCALE / (nearest_flower_distance + 0.1)
-            reward += proximity_reward
-            
-            # Bonus for being very close to any available flower
-            if nearest_flower_distance < 2.0:
-                reward += 2.0  # Strong signal when close to target
+        # Only keep core penalty
+        reward -= 0.05  # Basic step penalty to encourage efficiency
         
-        # Exploration bonus for visiting new areas
-        current_pos_key = (int(self.agent_pos[0]), int(self.agent_pos[1]), int(self.agent_pos[2]))
-        if current_pos_key not in self.visited_positions:
-            self.visited_positions.add(current_pos_key)
-            reward += self.EXPLORATION_BONUS
-        
-        # Rewards and penalties
-        reward -= 0.05  # Reduced step penalty (was 0.1)
-        
-        # ENERGY EFFICIENCY REWARDS
-        # Reward efficient action choices based on energy cost
-        if action == 5:  # Down movement (cheapest)
-            reward += 0.3
-        elif action in [0, 1, 2, 3]:  # Horizontal movement (moderate cost)
-            reward += 0.1
-        elif action == 4:  # Up movement (expensive)
-            reward -= 0.1
-        elif action == 6:  # Hover (most expensive)
-            # Only reward hover if on a flower or very close to one
-            on_flower = any(np.linalg.norm(self.agent_pos - flower[:3]) < 1.2 for flower in self.flowers)
-            if on_flower:
-                reward += 0.2  # Good hover - collecting nectar
-            else:
-                reward -= 0.5  # Bad hover - wasting energy
-        
-        # Energy sustainability bonus
-        energy_ratio = self.agent_energy / self.max_energy
-        steps_remaining = max(1, 300 - self.steps_taken)
-        energy_per_step_needed = 2.0  # Conservative estimate
-        sustainable_energy = steps_remaining * energy_per_step_needed
-        
-        if self.agent_energy > sustainable_energy:
-            reward += 0.2  # Reward for being energy-positive
-        elif self.agent_energy < sustainable_energy * 0.5:
-            reward -= 0.3  # Penalty for energy crisis
-        
-        # Progressive survival bonuses (encourage longer episodes)
-        if self.steps_taken >= 150:
-            reward += 1.0
-        if self.steps_taken >= 200:
-            reward += 2.0
-        if self.steps_taken >= 250:
-            reward += 3.0
-        
-        energy_ratio = self.agent_energy / self.max_energy
-        if energy_ratio > 0.5:
-            reward += 0.5
-        elif energy_ratio < 0.2:
-            reward -= 1.0
-        
-        if 2 <= self.agent_pos[2] <= self.max_height - 2:
-            reward += 0.1
+        # Removed all remaining engineered rewards for autonomous learning
         
         # Termination conditions
         terminated = False
@@ -607,7 +478,7 @@ class ComplexHummingbird3DMatplotlibEnv(gym.Env):
             'energy_ratio': self.agent_energy / self.max_energy,
             'nearest_flower_distance': min([np.linalg.norm(self.agent_pos - flower[:3]) 
                                            for flower in self.flowers]) if len(self.flowers) > 0 else float('inf'),
-            'areas_explored': len(self.visited_positions)
+            'areas_explored': 0  # Removed for autonomous learning
         }
         
         # NEW: Track reward for real-time display
@@ -640,21 +511,13 @@ class ComplexHummingbird3DMatplotlibEnv(gym.Env):
                                        self.flowers[i, 3] + self.NECTAR_REGEN_RATE)
     
     def _get_observation(self):
-        """Get current observation with enhanced flower status information."""
-        # Calculate energy efficiency metrics
-        energy_ratio = self.agent_energy / self.max_energy
-        steps_remaining = max(0, 300 - self.steps_taken)
-        energy_burn_rate = self._last_energy_cost if hasattr(self, '_last_energy_cost') else 2.0
-        energy_sustainability = min(1.0, self.agent_energy / max(1, steps_remaining * 2.0))
-        
+        """Get current observation with RAW data only - let agent learn patterns."""
+        # RAW AGENT DATA ONLY - no engineered features
         agent_obs = np.array([
             self.agent_pos[0], 
             self.agent_pos[1], 
             self.agent_pos[2], 
-            self.agent_energy,
-            energy_ratio,           # Energy as percentage of max
-            energy_burn_rate,       # Last step's energy cost
-            energy_sustainability   # Can survive remaining steps?
+            self.agent_energy
         ], dtype=np.float32)
         
         # Enhanced flower observations with availability status
