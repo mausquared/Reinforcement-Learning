@@ -5,6 +5,7 @@
 
 import os
 import sys
+import time
 import numpy as np
 import pickle
 from datetime import datetime
@@ -16,10 +17,27 @@ from stable_baselines3 import PPO
 from stable_baselines3.common.env_util import make_vec_env
 from stable_baselines3.common.callbacks import BaseCallback, EvalCallback
 from stable_baselines3.common.monitor import Monitor
-from stable_baselines3.common.vec_env import DummyVecEnv, SubprocVecEnv
+from stable_baselines3.common.vec_env import DummyVecEnv, SubprocVecEnv, VecNormalize
+from typing import Callable
 
 # Import our 3D matplotlib environment
-from hummingbird_env import ComplexHummingbird3DMatplotlibEnv
+from hummingbird_env import ComplexHummingbird3DMatplotlibEnv, CurriculumHummingbirdEnv
+
+
+def linear_schedule(initial_value: float) -> Callable[[float], float]:
+    """
+    Linear learning rate schedule.
+    
+    Args:
+        initial_value: Initial learning rate
+    
+    Returns:
+        Schedule function that takes progress_remaining (1 to 0) and returns learning rate
+    """
+    def func(progress_remaining: float) -> float:
+        """Progress will decrease from 1 (beginning) to 0 (end)."""
+        return progress_remaining * initial_value
+    return func
 
 
 class Complex3DMatplotlibTrainingCallback(BaseCallback):
@@ -44,6 +62,13 @@ class Complex3DMatplotlibTrainingCallback(BaseCallback):
         self.current_episode_length = 0
         self.episode_nectar = 0
         self.episode_altitudes = []
+        
+        # NEW: Peak performance tracking for auto-save
+        self.best_survival_rate = 0.0
+        self.best_reward = 0.0
+        self.peak_performance_threshold = 40.0  # Auto-save when survival > 40%
+        self.models_saved = 0
+        self.last_peak_save_step = 0
         
     def _on_step(self) -> bool:
         self.current_episode_reward += self.locals.get('rewards', [0])[0]
@@ -73,15 +98,29 @@ class Complex3DMatplotlibTrainingCallback(BaseCallback):
                 avg_altitude = np.mean(self.episode_altitudes)
                 self.training_stats['altitude_stats'].append(avg_altitude)
             
-            # Determine crash reason from info
+            # FIXED: Determine episode end reason based on episode length, not just energy
             if 'infos' in self.locals and len(self.locals['infos']) > 0:
                 info = self.locals['infos'][0]
                 if 'energy' in info:
                     self.training_stats['energy_at_death'].append(info['energy'])
-                    if info['energy'] <= 0:
+                
+                # CORRECTED LOGIC: Use episode length to determine survival
+                if self.current_episode_length >= 300:
+                    # Agent survived to time limit (success!)
+                    self.training_stats['episode_end_reasons'].append('time_limit')
+                else:
+                    # Agent died before time limit (most likely energy depletion)
+                    if info.get('energy', 0) <= 0:
                         self.training_stats['episode_end_reasons'].append('energy_depletion')
                     else:
-                        self.training_stats['episode_end_reasons'].append('time_limit')
+                        # Died for other reasons (shouldn't happen in current environment)
+                        self.training_stats['episode_end_reasons'].append('other_termination')
+            else:
+                # Fallback: use episode length
+                if self.current_episode_length >= 300:
+                    self.training_stats['episode_end_reasons'].append('time_limit')
+                else:
+                    self.training_stats['episode_end_reasons'].append('energy_depletion')
             
             # Reset episode tracking
             self.current_episode_reward = 0
@@ -108,8 +147,70 @@ class Complex3DMatplotlibTrainingCallback(BaseCallback):
                 progress_bar = "█" * int(progress_percent // 5) + "░" * (20 - int(progress_percent // 5))
                 print(f"🐦 Training #{self.training_num} | Step {self.num_timesteps:,} [{progress_bar}] {progress_percent:.0f}%")
                 print(f"   📊 Reward {avg_reward:.1f} | Nectar {avg_nectar:.1f} | Survival {survival_rate:.0f}%")
+                
+                # NEW: Peak performance auto-save detection
+                self._check_peak_performance(survival_rate, avg_reward)
         
         return True
+    
+    def _check_peak_performance(self, current_survival_rate, current_avg_reward):
+        """Check for peak performance and auto-save models."""
+        # Check if this is a new peak performance
+        is_new_survival_peak = current_survival_rate > self.best_survival_rate
+        is_new_reward_peak = current_avg_reward > self.best_reward
+        
+        # Auto-save conditions
+        should_save = False
+        save_reason = ""
+        
+        if current_survival_rate >= self.peak_performance_threshold and is_new_survival_peak:
+            should_save = True
+            save_reason = f"New survival peak: {current_survival_rate:.1f}%"
+            self.best_survival_rate = current_survival_rate
+            
+        elif current_survival_rate >= 35.0 and is_new_reward_peak:
+            should_save = True  
+            save_reason = f"New reward peak: {current_avg_reward:.1f} (survival: {current_survival_rate:.1f}%)"
+            self.best_reward = current_avg_reward
+        
+        # Save the model if peak performance detected
+        if should_save and (self.num_timesteps - self.last_peak_save_step) >= 200000:  # Don't save too frequently
+            self.models_saved += 1
+            
+            # Create models directory if it doesn't exist
+            import os
+            os.makedirs("models", exist_ok=True)
+            
+            peak_model_path = f"models/peak_performance_{self.num_timesteps//1000}k_survival_{current_survival_rate:.1f}%.zip"
+            
+            print(f"\n🏆 PEAK PERFORMANCE DETECTED! Auto-saving model...")
+            print(f"   📊 {save_reason}")
+            print(f"   📁 Saved as: {peak_model_path}")
+            print(f"   ⏰ Step: {self.num_timesteps:,}")
+            
+            # Save the model
+            self.model.save(peak_model_path)
+            
+            # Also update best_model.zip if this is excellent performance
+            if current_survival_rate >= 40.0:
+                best_model_path = "models/best_model.zip"
+                self.model.save(best_model_path)
+                print(f"   🥇 Also updated best_model.zip (survival ≥ 40%)")
+            
+            self.last_peak_save_step = self.num_timesteps
+            
+            # Create a summary file
+            summary_path = f"models/peak_performance_{self.num_timesteps//1000}k_summary.txt"
+            with open(summary_path, 'w') as f:
+                from datetime import datetime
+                f.write(f"Peak Performance Model Summary\n")
+                f.write(f"Saved at timestep: {self.num_timesteps:,}\n")
+                f.write(f"Survival rate: {current_survival_rate:.1f}%\n") 
+                f.write(f"Average reward: {current_avg_reward:.1f}\n")
+                f.write(f"Save reason: {save_reason}\n")
+                f.write(f"Timestamp: {datetime.now()}\n")
+                f.write(f"Training session: #{self.training_num}\n")
+                f.write(f"Models saved so far: {self.models_saved}\n")
 
 
 def create_3d_matplotlib_env():
@@ -120,6 +221,37 @@ def create_3d_matplotlib_env():
         max_energy=100,
         max_height=8,
         render_mode=None  # No rendering during training for speed
+    )
+
+
+def create_stable_3d_matplotlib_env(render_mode=None):
+    """Create a 3D matplotlib hummingbird environment with survival rewards for stable training."""
+    
+    class StableHummingbirdEnv(ComplexHummingbird3DMatplotlibEnv):
+        """Enhanced environment with survival rewards for stable training."""
+        
+        def step(self, action):
+            """Enhanced step function with survival rewards."""
+            # Call parent step function
+            obs, reward, terminated, truncated, info = super().step(action)
+            
+            # Add survival reward - critical for stable training!
+            if not terminated:  # Only if agent is still alive
+                survival_reward = 0.1  # Small positive reward for each step survived
+                reward += survival_reward
+                
+                # Optional: Small bonus for maintaining higher energy levels
+                energy_bonus = 0.02 * (self.agent_energy / self.max_energy)  # 0-0.02 based on energy level
+                reward += energy_bonus
+            
+            return obs, reward, terminated, truncated, info
+    
+    return StableHummingbirdEnv(
+        grid_size=10,
+        num_flowers=5,
+        max_energy=100,
+        max_height=8,
+        render_mode=render_mode
     )
 
 
@@ -257,6 +389,386 @@ def train_complex_3d_matplotlib_ppo(timesteps=500000, model_name=None):
         return model, training_callback.training_stats
 
 
+def train_stable_3d_matplotlib_ppo(timesteps=2000000, model_name=None):
+    """Train PPO with stable hyperparameters and essential survival rewards for consistent learning."""
+    
+    # Generate training session info
+    training_num = get_next_training_number()
+    timesteps_label = f"{timesteps//1000}k" if timesteps >= 1000 else str(timesteps)
+    
+    if model_name is None:
+        # Mark stable models with special identifier
+        model_name = f"stable_autonomous_{training_num}_{timesteps_label}"
+    
+    print("⚖️ 3D HUMMINGBIRD STABLE AUTONOMOUS LEARNING (ENHANCED)")
+    print("=" * 50)
+    print(f"📋 Training Session: #{training_num}")
+    print(f"🎯 Target Timesteps: {timesteps:,}")
+    print(f"⚖️ Training Mode: ENHANCED STABLE AUTONOMOUS LEARNING")
+    print(f"💾 Model Name: {model_name}")
+    print(f"📊 Reward Engineering: MINIMAL + Essential Survival Incentives")
+    print(f"🔧 Hyperparameters: OPTIMIZED FOR STABILITY + PERFORMANCE")
+    print("=" * 50)
+    print(f"🎛️ ENHANCED STABILITY OPTIMIZATIONS:")
+    print(f"   • Learning Rate: SCHEDULE 3e-4 → 0 (vs fixed 1e-4)")
+    print(f"   • Rollout Buffer: 4096 steps (vs 2048 standard)")
+    print(f"   • Observation Norm: ENABLED (mean=0, std=1)")
+    print(f"   • Batch Size: 128 (vs 256 standard)")
+    print(f"   • Entropy Coef: 0.005 (vs 0.02 standard)")
+    print(f"   • Network Size: Reduced for stable gradients")
+    print(f"   • Environment Count: 16 (optimal for stability)")
+    print(f"   • Survival Rewards: +0.1 per step alive (essential task component)")
+    print(f"   • Energy Bonus: +0.02 max for maintaining energy (encourages efficiency)")
+    print("=" * 50)
+    print(f"🎯 EXPECTED IMPROVEMENTS (ENHANCED):")
+    print(f"   • Survival Rate: 0% → 20-50% (major improvement)")
+    print(f"   • Training Stability: Dramatically reduced fluctuations")
+    print(f"   • Learning Efficiency: Better sample efficiency")
+    print(f"   • Convergence: Smoother and more predictable")
+    print(f"   • Performance Ceiling: Higher achievable performance")
+    print(f"   • Task Understanding: Agent learns survival + foraging")
+    print("=" * 50)
+    
+    # Create vectorized training environment with fewer envs for stability + survival rewards
+    n_envs = 16  # Reduced from 25 for more stable training
+    env = make_vec_env(create_stable_3d_matplotlib_env, n_envs=n_envs, vec_env_cls=SubprocVecEnv)
+    
+    # ENHANCEMENT: Add observation normalization for better performance
+    print(f"🔧 Adding observation normalization for improved stability...")
+    env = VecNormalize(env, norm_obs=True, norm_reward=False, gamma=0.99)
+    
+    # Create evaluation environment (using stable environment for consistent evaluation)
+    eval_env = make_vec_env(create_stable_3d_matplotlib_env, n_envs=1, vec_env_cls=DummyVecEnv)
+    eval_env = VecNormalize(eval_env, norm_obs=True, norm_reward=False, gamma=0.99)
+    
+    # ENHANCEMENT: Use learning rate schedule instead of fixed rate
+    print(f"📈 Using learning rate schedule for better convergence...")
+    lr_schedule = linear_schedule(0.0003)  # Start at 3e-4 and decay to 0
+    
+    # ENHANCEMENT: Increase rollout buffer size for more stable advantage estimates
+    n_steps_per_env = 256  # Increased from 128 (total buffer: 16 * 256 = 4096)
+    
+    # STABLE PPO hyperparameters - optimized for consistency over speed
+    model = PPO(
+        "MultiInputPolicy",  # Required for Dict observation spaces
+        env,
+        learning_rate=lr_schedule,  # ENHANCED: Learning rate schedule
+        n_steps=n_steps_per_env,  # ENHANCED: Larger rollout buffer
+        batch_size=128,  # REDUCED from 256 for more frequent updates
+        n_epochs=10,  # REDUCED from 15 for stable learning
+        gamma=0.995,  # ENHANCED: Higher discount for long-term thinking
+        gae_lambda=0.95,  # Standard GAE
+        clip_range=0.2,  # Standard clip range
+        clip_range_vf=None,
+        normalize_advantage=True,
+        ent_coef=0.01,  # ENHANCED: Increased exploration to escape local optimum
+        vf_coef=0.5,  # Standard value function coefficient
+        max_grad_norm=0.5,  # Standard gradient clipping
+        use_sde=False,
+        sde_sample_freq=-1,
+        target_kl=None,
+        tensorboard_log="./logs/",
+        policy_kwargs=dict(
+            net_arch=dict(pi=[256, 128], vf=[256, 128]),  # SMALLER networks for stable gradients
+            activation_fn=nn.Tanh
+        ),
+        verbose=0
+    )
+    
+    print(f"✅ Enhanced stable model created with:")
+    print(f"   📈 Learning rate schedule: 3e-4 → 0 (linear decay)")
+    print(f"   📊 Rollout buffer size: {n_envs * n_steps_per_env} steps")
+    print(f"   🎯 Observation normalization: ENABLED")
+    print(f"   🔍 Balanced incentive optimizations:")
+    print(f"      • First-visit bonus: +5 reward for flower discovery (reduced from +25)")
+    print(f"      • Inefficiency penalty: -2 reward for visiting unavailable flowers")
+    print(f"      • Enhanced exploration: ent_coef = 0.01 (2x increase)")
+    print(f"      • Long-term thinking: gamma = 0.995 (vs 0.99)")
+    print(f"🔄 Using {n_envs} parallel environments for stable training")
+    
+    # Set up callbacks with adjusted logging frequency
+    training_callback = Complex3DMatplotlibTrainingCallback(
+        log_freq=50000,  # Less frequent logging for stability focus
+        training_num=training_num, 
+        total_timesteps=timesteps
+    )
+    
+    # Define callback to save VecNormalize stats when a new best model is found
+    class VecNormalizeSaveCallback(BaseCallback):
+        """Callback to save VecNormalize statistics when a new best model is found."""
+        
+        def __init__(self, vec_env):
+            super().__init__()
+            self.vec_env = vec_env
+        
+        def _on_step(self) -> bool:
+            return True
+        
+        def _on_training_start(self) -> None:
+            pass
+        
+        def _on_rollout_start(self) -> None:
+            pass
+        
+        def _on_rollout_end(self) -> None:
+            try:
+                # Save VecNormalize stats along with the model
+                self.vec_env.save(f"./models/vec_normalize_stats.pkl")
+                print(f"💾 VecNormalize stats saved with new best model")
+            except Exception as e:
+                print(f"⚠️ Warning: Could not save VecNormalize stats: {e}")
+            
+    vec_normalize_callback = VecNormalizeSaveCallback(env)
+    
+    eval_callback = EvalCallback(
+        eval_env,
+        best_model_save_path="./models/",
+        log_path="./logs/",
+        eval_freq=25000,  # More frequent evaluation to monitor stability
+        deterministic=True,
+        render=False,
+        n_eval_episodes=5,  # Fewer episodes for faster evaluation
+        callback_on_new_best=vec_normalize_callback
+    )
+    
+    callbacks = [training_callback, eval_callback]
+    
+    # Train the model
+    print("\n🚀 Starting stable training...")
+    start_time = datetime.now()
+    
+    try:
+        model.learn(
+            total_timesteps=timesteps,
+            callback=callbacks,
+            tb_log_name="PPO_3D_matplotlib_stable"
+        )
+        
+        training_time = datetime.now() - start_time
+        print(f"\n✅ Stable training completed in {training_time}")
+        
+        # Save the final model
+        model.save(f"./models/{model_name}")
+        print(f"💾 Stable model saved as {model_name}")
+        
+        # ENHANCEMENT: Save VecNormalize stats with the final model
+        try:
+            env.save(f"./models/{model_name}_vec_normalize_stats.pkl")
+            print(f"🎯 VecNormalize stats saved for model: {model_name}")
+        except Exception as e:
+            print(f"⚠️ Warning: Could not save VecNormalize stats: {e}")
+        
+        # Save training statistics
+        with open(f"./models/{model_name}_training_stats.pkl", 'wb') as f:
+            pickle.dump(training_callback.training_stats, f)
+        print("📊 Training statistics saved")
+        
+        # Generate training analysis plots
+        create_training_analysis_plots(training_callback.training_stats, model_name)
+        
+        print(f"\n🎉 STABLE TRAINING SUMMARY:")
+        print("=" * 50)
+        print(f"💾 Model: {model_name}")
+        print(f"⏱️  Duration: {training_time}")
+        print(f"📈 Timesteps: {timesteps:,}")
+        print(f"⚖️ Mode: Stable Autonomous Learning")
+        print(f"🔧 Optimizations: Applied for training stability")
+        print(f"📊 Expected: Reduced reward fluctuations")
+        print(f"🎯 Goal: Higher survival rates over time")
+        print("=" * 50)
+        
+        return model, training_callback.training_stats
+        
+    except KeyboardInterrupt:
+        print("\n⚠️ Stable training interrupted by user")
+        model.save(f"./models/{model_name}_interrupted")
+        return model, training_callback.training_stats
+
+
+def train_curriculum_3d_matplotlib_ppo(difficulty='beginner', auto_progress=True, timesteps=2000000, model_name=None):
+    """Train PPO with curriculum learning for progressive difficulty mastery."""
+    
+    # Ensure timesteps is an integer
+    try:
+        timesteps = int(timesteps)
+        if timesteps <= 0:
+            raise ValueError("Timesteps must be positive")
+    except (ValueError, TypeError):
+        print("Error: Invalid timesteps parameter. Must be a positive integer.")
+        return
+    
+    # Generate training session info
+    training_num = get_next_training_number()
+    timesteps_label = f"{timesteps//1000}k" if timesteps >= 1000 else str(timesteps)
+    
+    if model_name is None:
+        progress_type = "auto" if auto_progress else "manual"
+        model_name = f"curriculum_{difficulty}_{progress_type}_{training_num}_{timesteps_label}"
+    
+    print("📚 3D HUMMINGBIRD CURRICULUM LEARNING")
+    print("=" * 50)
+    print(f"📋 Training Session: #{training_num}")
+    print(f"🎯 Target Timesteps: {timesteps:,}")
+    print(f"📚 Training Mode: CURRICULUM LEARNING")
+    print(f"🎓 Starting Difficulty: {difficulty.upper()}")
+    print(f"📈 Auto-progression: {'ENABLED' if auto_progress else 'DISABLED'}")
+    print(f"💾 Model Name: {model_name}")
+    print("=" * 50)
+    
+    # Initialize curriculum environment
+    print(f"🏗️ Creating curriculum environment...")
+    try:
+        # Create environment with curriculum settings
+        def make_curriculum_env():
+            env = CurriculumHummingbirdEnv(
+                difficulty=difficulty, 
+                auto_progress=auto_progress
+            )
+            env = Monitor(env, f"logs/curriculum_{difficulty}_{training_num}.monitor.csv")
+            return env
+        
+        # Create vector environment (reduced to 2 for curriculum stability)
+        env = DummyVecEnv([make_curriculum_env for _ in range(2)])
+        print(f"✅ Curriculum environment created successfully")
+        
+        # Curriculum-optimized hyperparameters
+        custom_policy_kwargs = {
+            'net_arch': dict(pi=[128, 128], vf=[128, 128]),  # Smaller network for curriculum
+            'activation_fn': nn.ReLU
+        }
+        
+        print(f"🤖 Creating PPO model with curriculum-optimized hyperparameters...")
+        model = PPO(
+            "MultiInputPolicy",        # FIXED: Use MultiInputPolicy for Dict observation space
+            env,
+            learning_rate=0.0002,      # Slower learning for curriculum
+            n_steps=1024,              # Standard batch collection
+            batch_size=64,             # Smaller batches for stability
+            n_epochs=4,                # Fewer epochs per update
+            gamma=0.99,                # Standard discount
+            gae_lambda=0.95,           # Standard GAE
+            clip_range=0.2,            # Standard clipping
+            ent_coef=0.01,             # Moderate exploration
+            vf_coef=0.5,               # Standard value function weight
+            max_grad_norm=0.5,         # Standard gradient clipping
+            policy_kwargs=custom_policy_kwargs,
+            verbose=0,                 # SUPPRESS verbose PPO output tables
+            tensorboard_log=f"./logs/PPO_{model_name}/"
+        )
+        
+        print(f"✅ PPO model created successfully")
+        print(f"🎓 CURRICULUM LEARNING SETUP:")
+        print(f"   • Progressive difficulty: {difficulty} → ... → hard")
+        print(f"   • Auto-progression: {auto_progress}")
+        print(f"   • Learning rate: 0.0002 (curriculum-optimized)")
+        print(f"   • Network: [128,128] (compact for stability)")
+        print(f"   • Environments: 2 (reduced for consistency)")
+        
+        # Create curriculum-aware callback
+        class CurriculumTrainingCallback(Complex3DMatplotlibTrainingCallback):
+            """Extended callback for curriculum learning with difficulty tracking."""
+            
+            def __init__(self, log_freq=1000, training_num=1, total_timesteps=500000, verbose=1):
+                super().__init__(log_freq, training_num, total_timesteps, verbose)
+                self.difficulty_changes = []
+                self.last_difficulty = difficulty
+                
+            def _on_step(self) -> bool:
+                # Call parent step method
+                result = super()._on_step()
+                
+                # Track difficulty changes
+                if hasattr(self.training_env.envs[0], 'difficulty'):
+                    current_difficulty = self.training_env.envs[0].difficulty
+                    if current_difficulty != self.last_difficulty:
+                        self.difficulty_changes.append({
+                            'step': self.num_timesteps,
+                            'old_difficulty': self.last_difficulty,
+                            'new_difficulty': current_difficulty
+                        })
+                        self.last_difficulty = current_difficulty
+                        print(f"\n🎓 CURRICULUM PROGRESSION!")
+                        print(f"📈 Advanced to {current_difficulty.upper()} at step {self.num_timesteps:,}")
+                
+                return result
+            
+            def _on_training_end(self) -> None:
+                super()._on_training_end()
+                
+                # Print curriculum progression summary
+                if self.difficulty_changes:
+                    print(f"\n📚 CURRICULUM PROGRESSION SUMMARY:")
+                    print(f"🎓 Total difficulty changes: {len(self.difficulty_changes)}")
+                    for change in self.difficulty_changes:
+                        print(f"   Step {change['step']:,}: {change['old_difficulty']} → {change['new_difficulty']}")
+                else:
+                    print(f"\n📚 CURRICULUM STATUS: Remained at {difficulty.upper()} level")
+        
+        training_callback = CurriculumTrainingCallback(
+            log_freq=1000, 
+            training_num=training_num, 
+            total_timesteps=timesteps
+        )
+        
+        print(f"\n🚀 Starting curriculum learning...")
+        print(f"📊 Progress will be logged every 1000 steps")
+        print(f"🎓 Difficulty progression will be automatic (if enabled)")
+        print(f"⏹️ Press Ctrl+C to stop training safely")
+        print("=" * 50)
+        
+        # Start training
+        model.learn(
+            total_timesteps=timesteps,
+            callback=training_callback,
+            reset_num_timesteps=True
+        )
+        
+        # Save the model
+        model.save(f"./models/{model_name}")
+        model.save("./models/best_model")  # Also save as default
+        
+        # Get final curriculum status
+        if hasattr(env.envs[0], 'get_curriculum_status'):
+            final_status = env.envs[0].get_curriculum_status()
+            print(f"\n📚 FINAL CURRICULUM STATUS:")
+            print(f"🎓 Final difficulty: {final_status['difficulty'].upper()}")
+            print(f"📊 Episodes at final level: {final_status['episodes_at_difficulty']}")
+            print(f"🎯 Final survival rate: {final_status['survival_rate']*100:.1f}%")
+            print(f"📈 Progress to next level: {final_status['progress_to_next']*100:.1f}%")
+        
+        env.close()
+        
+        # Create training analysis
+        print(f"\n📊 Training completed! Generating analysis...")
+        create_training_analysis_plots(training_callback.training_stats, model_name)
+        
+        # Save training statistics
+        with open(f"models/{model_name}_curriculum_stats.pkl", "wb") as f:
+            pickle.dump({
+                'training_stats': training_callback.training_stats,
+                'difficulty_changes': training_callback.difficulty_changes,
+                'final_status': final_status if 'final_status' in locals() else None,
+                'hyperparameters': {
+                    'learning_rate': 0.0002,
+                    'batch_size': 64,
+                    'starting_difficulty': difficulty,
+                    'auto_progress': auto_progress
+                }
+            }, f)
+        
+        print(f"✅ Model saved as: ./models/{model_name}")
+        print(f"✅ Default model updated: ./models/best_model")
+        print(f"📊 Training analysis saved")
+        print(f"🎓 Curriculum learning completed successfully!")
+        
+        return model, training_callback.training_stats
+        
+    except KeyboardInterrupt:
+        print("\n⚠️ Curriculum training interrupted by user")
+        model.save(f"./models/{model_name}_interrupted")
+        return model, training_callback.training_stats
+
+
 def create_training_analysis_plots(stats, model_name):
     """Create comprehensive training analysis plots for 3D environment."""
     
@@ -346,12 +858,33 @@ def create_training_analysis_plots(stats, model_name):
     
     # 6. Episode end reasons analysis
     if stats['episode_end_reasons']:
-        crash_types = ['energy_depletion', 'time_limit']
-        crash_counts = [stats['episode_end_reasons'].count(crash_type) for crash_type in crash_types]
-        colors = ['red', 'gray']
+        # Updated labels to reflect the fix
+        end_reasons = ['energy_depletion', 'time_limit', 'other_termination']
+        reason_counts = [stats['episode_end_reasons'].count(reason) for reason in end_reasons]
         
-        axes[1, 2].pie(crash_counts, labels=crash_types, colors=colors, autopct='%1.1f%%')
-        axes[1, 2].set_title('Episode End Reasons')
+        # Only show non-zero categories
+        non_zero_reasons = []
+        non_zero_counts = []
+        colors = []
+        
+        for i, (reason, count) in enumerate(zip(end_reasons, reason_counts)):
+            if count > 0:
+                non_zero_reasons.append(reason.replace('_', ' ').title())
+                non_zero_counts.append(count)
+                if reason == 'energy_depletion':
+                    colors.append('red')
+                elif reason == 'time_limit':
+                    colors.append('green')
+                else:
+                    colors.append('orange')
+        
+        if non_zero_counts:
+            axes[1, 2].pie(non_zero_counts, labels=non_zero_reasons, colors=colors, autopct='%1.1f%%')
+            axes[1, 2].set_title('Episode End Reasons')
+        else:
+            axes[1, 2].text(0.5, 0.5, 'No episode data available', 
+                           ha='center', va='center', transform=axes[1, 2].transAxes)
+            axes[1, 2].set_title('Episode End Reasons')
     
     plt.tight_layout()
     
@@ -363,21 +896,30 @@ def create_training_analysis_plots(stats, model_name):
 
 
 def test_trained_model_3d_matplotlib(model_path, num_episodes=10, render=True):
-    """Test a trained model in the 3D matplotlib environment."""
+    """Test a trained model in the 3D matplotlib environment with proper environment compatibility."""
     
     print(f"🐦 Testing trained 3D matplotlib model: {model_path}")
     
     # Load the model
     model = PPO.load(model_path)
     
-    # Create test environment with rendering
-    env = ComplexHummingbird3DMatplotlibEnv(
-        grid_size=10,
-        num_flowers=5,
-        max_energy=100,
-        max_height=8,
-        render_mode="matplotlib" if render else None
-    )
+    # Determine environment version and create appropriate environment
+    env_version = get_model_environment_version(model_path)
+    
+    # Create test environment with proper compatibility
+    env = create_environment_for_model(model_path, render_mode="matplotlib" if render else None)
+    
+    # Compatibility info
+    if env_version == 'stable':
+        print(f"   ⚖️ Using STABLE environment with survival rewards")
+        print(f"   ✅ Optimal testing environment for this model")
+    elif env_version == 'legacy':
+        print(f"   🚨 COMPATIBILITY WARNING:")
+        print(f"   This model was trained with engineered rewards")
+        print(f"   Testing in current autonomous learning environment")
+        print(f"   Results may not reflect the model's true trained performance!")
+    else:
+        print(f"   ✅ Using compatible autonomous learning environment")
     
     episode_rewards = []
     episode_lengths = []
@@ -441,12 +983,45 @@ def get_model_environment_version(model_path):
     """Determine which environment version a model was trained in based on filename patterns."""
     model_name = os.path.basename(model_path).lower()
     
+    # Check if this is a stable training model (highest priority)
+    stable_indicators = [
+        'stable',
+        'stable_autonomous',
+        'stable_continued',
+        'peak_performance',  # Peak models are saved during stable training
+        'survival',          # Models with survival in name are likely stable
+        '_stable_'          # Models with _stable_ in name
+    ]
+    
+    for indicator in stable_indicators:
+        if indicator in model_name:
+            return 'stable'
+    
+    # Check specific model numbers/dates that we know are stable
+    # Models trained with the stable environment
+    stable_model_patterns = [
+        'ppo_14',   # 14M timestep stable model
+        'ppo_15',   # 15M+ stable models 
+        'ppo_16',
+        'ppo_17',
+        'ppo_18',
+        'ppo_19',
+        'ppo_20',
+        'ppo_21',
+        'ppo_22'    # Any recent models likely stable
+    ]
+    
+    for pattern in stable_model_patterns:
+        if pattern in model_name:
+            return 'stable'
+    
     # Models with these numbers/dates were trained in the autonomous learning environment
     autonomous_indicators = [
         'autonomous',
         'phase2', 
         'minimal_reward',
-        'discovery'
+        'discovery',
+        '3d_matplotlib'  # Original 3D matplotlib models
     ]
     
     # Check if this is an autonomous learning model
@@ -467,7 +1042,11 @@ def create_environment_for_model(model_path, render_mode=None):
     """Create the appropriate environment version for evaluating a specific model."""
     env_version = get_model_environment_version(model_path)
     
-    if env_version == 'autonomous':
+    if env_version == 'stable':
+        # Use stable environment with survival rewards
+        print(f"   ⚖️ Using STABLE TRAINING environment (with survival rewards)")
+        return create_stable_3d_matplotlib_env(render_mode=render_mode)
+    elif env_version == 'autonomous':
         # Use current autonomous learning environment
         print(f"   📊 Using AUTONOMOUS LEARNING environment (minimal rewards)")
         return ComplexHummingbird3DMatplotlibEnv(
@@ -578,12 +1157,58 @@ def evaluate_model_comprehensive(model_path, num_episodes=100, render=False):
         print(f"⚠️  WARNING: Legacy model evaluated in new environment!")
     print(f"Episodes: {num_episodes}")
     print("-" * 50)
-    print(f"🏆 Average Reward: {np.mean(episode_rewards):.2f} ± {np.std(episode_rewards):.2f}")
-    print(f"🌸 Average Nectar: {np.mean(nectar_totals):.1f} ± {np.std(nectar_totals):.1f}")
+    
+    # Calculate confidence intervals (95%) using normal approximation
+    # from scipy import stats  # Not available, using numpy approximation
+    
+    def calculate_confidence_interval(data, confidence=0.95):
+        """Calculate confidence interval for the mean using normal approximation."""
+        n = len(data)
+        mean = np.mean(data)
+        std_err = np.std(data) / np.sqrt(n)  # Standard error of the mean
+        # For large n, use 1.96 for 95% confidence (normal approximation)
+        z_score = 1.96 if n >= 30 else 2.262  # Conservative t-value for small samples
+        margin = std_err * z_score
+        return mean - margin, mean + margin
+    
+    # Main metrics with confidence intervals
+    reward_mean = np.mean(episode_rewards)
+    reward_ci_low, reward_ci_high = calculate_confidence_interval(episode_rewards)
+    
+    nectar_mean = np.mean(nectar_totals)
+    nectar_ci_low, nectar_ci_high = calculate_confidence_interval(nectar_totals)
+    
+    survival_rate = (survival_count / num_episodes) * 100
+    # Confidence interval for proportions (binomial)
+    survival_ci_low = max(0, survival_rate - 1.96 * np.sqrt(survival_rate * (100 - survival_rate) / num_episodes))
+    survival_ci_high = min(100, survival_rate + 1.96 * np.sqrt(survival_rate * (100 - survival_rate) / num_episodes))
+    
+    print(f"🏆 Average Reward: {reward_mean:.2f} ± {np.std(episode_rewards):.2f}")
+    print(f"   95% CI: [{reward_ci_low:.2f}, {reward_ci_high:.2f}]")
+    print(f"🌸 Average Nectar: {nectar_mean:.1f} ± {np.std(nectar_totals):.1f}")
+    print(f"   95% CI: [{nectar_ci_low:.1f}, {nectar_ci_high:.1f}]")
+    print(f"💪 Survival Rate: {survival_rate:.1f}% ± {np.sqrt(survival_rate * (100 - survival_rate) / num_episodes):.1f}%")
+    print(f"   95% CI: [{survival_ci_low:.1f}%, {survival_ci_high:.1f}%] ({survival_count}/{num_episodes})")
     print(f"⏱️  Average Length: {np.mean(episode_lengths):.1f} ± {np.std(episode_lengths):.1f}")
     print(f"🔋 Average Final Energy: {np.mean(final_energies):.1f} ± {np.std(final_energies):.1f}")
     print(f"⚡ Average Energy Efficiency: {np.mean(energy_efficiency):.2f} nectar/energy")
-    print(f"💪 Survival Rate: {(survival_count / num_episodes) * 100:.1f}% ({survival_count}/{num_episodes})")
+    
+    # Variance analysis
+    reward_cv = np.std(episode_rewards) / np.mean(episode_rewards) * 100  # Coefficient of variation
+    nectar_cv = np.std(nectar_totals) / np.mean(nectar_totals) * 100 if np.mean(nectar_totals) > 0 else 0
+    
+    print("-" * 50)
+    print(f"� VARIANCE ANALYSIS:")
+    print(f"   Reward CV: {reward_cv:.1f}% {'(HIGH VARIANCE!)' if reward_cv > 50 else '(Moderate)' if reward_cv > 25 else '(Low variance)'}")
+    print(f"   Nectar CV: {nectar_cv:.1f}% {'(HIGH VARIANCE!)' if nectar_cv > 50 else '(Moderate)' if nectar_cv > 25 else '(Low variance)'}")
+    print(f"   Performance Range: {np.min(episode_rewards):.1f} to {np.max(episode_rewards):.1f} (spread: {np.max(episode_rewards) - np.min(episode_rewards):.1f})")
+    
+    if reward_cv > 50:
+        print(f"⚠️  HIGH VARIANCE DETECTED! Consider:")
+        print(f"   • More training for stability")
+        print(f"   • Lower learning rate")
+        print(f"   • More episodes for evaluation (500-1000)")
+        print(f"   • Environment determinism improvements")
     print("-" * 50)
     print(f"📈 Best Episode Reward: {np.max(episode_rewards):.2f}")
     print(f"📉 Worst Episode Reward: {np.min(episode_rewards):.2f}")
@@ -717,6 +1342,7 @@ def evaluate_all_models(show_plots=False):
     
     legacy_results = {}
     autonomous_results = {}
+    stable_results = {}
     
     for model_file in model_files:
         model_path = f"./models/{model_file}"
@@ -736,6 +1362,8 @@ def evaluate_all_models(show_plots=False):
             
             if env_version == 'legacy':
                 legacy_results[model_file] = model_stats
+            elif env_version == 'stable':
+                stable_results[model_file] = model_stats
             else:
                 autonomous_results[model_file] = model_stats
                 
@@ -766,11 +1394,21 @@ def evaluate_all_models(show_plots=False):
         for model, stats in sorted(autonomous_results.items(), key=lambda x: x[1]['avg_nectar'], reverse=True):
             print(f"{model[:34]:<35} {stats['avg_reward']:<10.1f} {stats['avg_nectar']:<10.1f} {stats['avg_length']:<10.1f} {stats['survival_rate']:<10.1f}%")
     
+    if stable_results:
+        print(f"\n⚖️ STABLE TRAINING MODELS (Optimized Performance)")
+        print(f"✅ Models with survival rewards and conservative hyperparameters")
+        print("-" * 80)
+        print(f"{'Model':<35} {'Reward':<10} {'Nectar':<10} {'Length':<10} {'Survival':<10}")
+        print("-" * 80)
+        
+        for model, stats in sorted(stable_results.items(), key=lambda x: x[1]['avg_nectar'], reverse=True):
+            print(f"{model[:34]:<35} {stats['avg_reward']:<10.1f} {stats['avg_nectar']:<10.1f} {stats['avg_length']:<10.1f} {stats['survival_rate']:<10.1f}%")
+    
     print("=" * 80)
     
     # Create comparison visualization if we have models to compare and plots are requested
-    if (legacy_results or autonomous_results) and show_plots:
-        create_model_comparison_plots(legacy_results, autonomous_results)
+    if (legacy_results or autonomous_results or stable_results) and show_plots:
+        create_model_comparison_plots(legacy_results, autonomous_results, stable_results)
     
     # Show best models by category
     if legacy_results:
@@ -779,23 +1417,32 @@ def evaluate_all_models(show_plots=False):
     
     if autonomous_results:
         best_autonomous = max(autonomous_results.items(), key=lambda x: x[1]['avg_nectar'])
-        print(f"🥇 Best autonomous model (by nectar): {best_autonomous[0]} (Nectar: {best_autonomous[1]['avg_nectar']:.1f})")
+        print(f"� Best autonomous model (by nectar): {best_autonomous[0]} (Nectar: {best_autonomous[1]['avg_nectar']:.1f})")
     
-    if not autonomous_results and legacy_results:
-        print(f"\n💡 RECOMMENDATION: Train new models with autonomous learning!")
+    if stable_results:
+        best_stable = max(stable_results.items(), key=lambda x: x[1]['avg_nectar'])
+        print(f"🥇 Best stable model (by nectar): {best_stable[0]} (Nectar: {best_stable[1]['avg_nectar']:.1f})")
+    
+    if not autonomous_results and not stable_results and legacy_results:
+        print(f"\n💡 RECOMMENDATION: Train new models with autonomous or stable learning!")
         print(f"   Current models use outdated reward engineering.")
-        print(f"   New autonomous models will discover strategies independently.")
+        print(f"   New models will discover strategies independently.")
+    elif autonomous_results and not stable_results:
+        print(f"\n💡 SUGGESTION: Try stable training for improved survival rates!")
+        print(f"   Stable training uses conservative hyperparameters for consistency.")
     
     print("=" * 80)
 
 
-def create_model_comparison_plots(legacy_results, autonomous_results):
+def create_model_comparison_plots(legacy_results, autonomous_results, stable_results=None):
     """Create comparison plots for all evaluated models."""
     
     # Combine all results for visualization
     all_results = {}
     all_results.update({f"{k} (Legacy)": v for k, v in legacy_results.items()})
     all_results.update({f"{k} (Autonomous)": v for k, v in autonomous_results.items()})
+    if stable_results:
+        all_results.update({f"{k} (Stable)": v for k, v in stable_results.items()})
     
     if not all_results:
         return
@@ -810,8 +1457,15 @@ def create_model_comparison_plots(legacy_results, autonomous_results):
     survival_rates = [all_results[model]['survival_rate'] for model in models]
     episode_lengths = [all_results[model]['avg_length'] for model in models]
     
-    # Colors: red for legacy, blue for autonomous
-    colors = ['red' if '(Legacy)' in model else 'blue' for model in models]
+    # Colors: red for legacy, blue for autonomous, green for stable
+    colors = []
+    for model in models:
+        if '(Legacy)' in model:
+            colors.append('red')
+        elif '(Stable)' in model:
+            colors.append('green')
+        else:
+            colors.append('blue')
     
     # 1. Nectar Collection Comparison
     bars1 = axes[0, 0].bar(range(len(models)), nectar_scores, color=colors, alpha=0.7)
@@ -892,7 +1546,8 @@ def create_model_comparison_plots(legacy_results, autonomous_results):
     # Add legend
     from matplotlib.patches import Patch
     legend_elements = [Patch(facecolor='red', alpha=0.7, label='Legacy Models'),
-                      Patch(facecolor='blue', alpha=0.7, label='Autonomous Models')]
+                      Patch(facecolor='blue', alpha=0.7, label='Autonomous Models'),
+                      Patch(facecolor='green', alpha=0.7, label='Stable Models')]
     fig.legend(handles=legend_elements, loc='upper right', bbox_to_anchor=(0.98, 0.98))
     
     plt.tight_layout()
@@ -908,16 +1563,23 @@ def create_model_comparison_plots(legacy_results, autonomous_results):
     return plot_path
 
 
-def continue_training_model(model_path, additional_timesteps):
-    """Continue training an existing model with additional timesteps."""
+def continue_training_model(model_path, additional_timesteps, use_stable_params=False):
+    """Continue training an existing model with additional timesteps and optionally stable parameters."""
     
     print("🔄 CONTINUING TRAINING EXISTING MODEL")
-    print("=" * 45)
+    print("=" * 50)
     print(f"📋 Base Model: {model_path}")
     print(f"📈 Additional Timesteps: {additional_timesteps:,}")
     print(f"🤖 Training Mode: CONTINUE EXISTING")
-    print(f"📊 Reward Engineering: PRESERVED (maintains learned strategies)")
-    print("=" * 45)
+    
+    if use_stable_params:
+        print(f"⚖️ Parameters: STABLE HYPERPARAMETERS + SURVIVAL REWARDS")
+        print(f"📊 Environment: STABLE (with survival incentives)")
+        print(f"🎯 Expected: Improved stability and survival rates")
+    else:
+        print(f"📊 Parameters: ORIGINAL (preserves learned strategies)")
+        print(f"🔧 Environment: ORIGINAL (autonomous learning)")
+    print("=" * 50)
     
     try:
         # Load existing model
@@ -925,12 +1587,28 @@ def continue_training_model(model_path, additional_timesteps):
         model = PPO.load(model_path)
         print("✅ Model loaded successfully!")
         
-        # Create environment (same as original training)
-        n_envs = 25  # Same as original training
-        env = make_vec_env(create_3d_matplotlib_env, n_envs=n_envs, vec_env_cls=SubprocVecEnv)
-        
-        # Create evaluation environment
-        eval_env = Monitor(create_3d_matplotlib_env())
+        if use_stable_params:
+            print("🔧 Applying stable training configuration...")
+            
+            # Update model hyperparameters to stable values
+            model.learning_rate = 0.0001  # Reduced from default 5e-4
+            model.batch_size = 128        # Reduced from default 256
+            model.ent_coef = 0.005        # Reduced from default 0.02
+            
+            print(f"   • Learning Rate: {model.learning_rate} (stable)")
+            print(f"   • Batch Size: {model.batch_size} (stable)")
+            print(f"   • Entropy Coef: {model.ent_coef} (stable)")
+            print(f"   • Environment: Stable with survival rewards")
+            
+            # Create stable environment with survival rewards
+            n_envs = 16  # Reduced for stability
+            env = make_vec_env(create_stable_3d_matplotlib_env, n_envs=n_envs, vec_env_cls=SubprocVecEnv)
+            eval_env = Monitor(create_stable_3d_matplotlib_env())
+        else:
+            # Use original configuration
+            n_envs = 25  # Original training
+            env = make_vec_env(create_3d_matplotlib_env, n_envs=n_envs, vec_env_cls=SubprocVecEnv)
+            eval_env = Monitor(create_3d_matplotlib_env())
         
         # Set environment for the loaded model
         model.set_env(env)
@@ -952,13 +1630,20 @@ def continue_training_model(model_path, additional_timesteps):
         # Extract base model name for the new name
         base_name = os.path.basename(model_path).replace('.zip', '')
         timesteps_label = f"{additional_timesteps//1000}k" if additional_timesteps >= 1000 else str(additional_timesteps)
-        new_model_name = f"{base_name}_continued_{timesteps_label}"
+        
+        if use_stable_params:
+            new_model_name = f"{base_name}_stable_continued_{timesteps_label}"
+        else:
+            new_model_name = f"{base_name}_continued_{timesteps_label}"
         
         print(f"💾 Will save as: {new_model_name}.zip")
         
-        # Set up callbacks for continued training
+        # Set up callbacks for continued training with adjusted frequency for stable training
+        log_freq = 50000 if use_stable_params else 25000
+        eval_freq = 25000 if use_stable_params else 10000
+        
         training_callback = Complex3DMatplotlibTrainingCallback(
-            log_freq=25000, 
+            log_freq=log_freq, 
             training_num=get_next_training_number(), 
             total_timesteps=additional_timesteps
         )
@@ -967,10 +1652,10 @@ def continue_training_model(model_path, additional_timesteps):
             eval_env,
             best_model_save_path="./models/",
             log_path="./logs/",
-            eval_freq=10000,
+            eval_freq=eval_freq,
             deterministic=True,
             render=False,
-            n_eval_episodes=10
+            n_eval_episodes=5 if use_stable_params else 10  # Fewer for stable training
         )
         
         callbacks = [training_callback, eval_callback]
@@ -1015,14 +1700,25 @@ def continue_training_model(model_path, additional_timesteps):
         create_training_analysis_plots(final_stats, new_model_name)
         
         print(f"\n🎉 CONTINUED TRAINING COMPLETED!")
-        print("=" * 45)
+        print("=" * 50)
         print(f"💾 Model saved as: {new_model_name}.zip")
         print(f"📊 Training stats saved as: {new_model_name}_training_stats.pkl")
         print(f"📈 Training analysis plot saved as: {new_model_name}_3d_matplotlib_training_analysis.png")
         print(f"⏱️  Training duration: {training_duration}")
         print(f"📈 Additional timesteps: {additional_timesteps:,}")
+        
+        if use_stable_params:
+            print(f"⚖️ Configuration: STABLE PARAMETERS APPLIED")
+            print(f"   • Survival rewards: +0.1 per step + energy bonus")
+            print(f"   • Hyperparameters: Optimized for stability")
+            print(f"   • Expected: Improved survival rates over time")
+        else:
+            print(f"🔧 Configuration: ORIGINAL PARAMETERS PRESERVED")
+            print(f"   • Environment: Autonomous learning (minimal rewards)")
+            print(f"   • Hyperparameters: Original training configuration")
+        
         print(f"🎯 Ready for evaluation!")
-        print("=" * 45)
+        print("=" * 50)
         
         # Clean up
         env.close()
@@ -1031,6 +1727,228 @@ def continue_training_model(model_path, additional_timesteps):
     except Exception as e:
         print(f"❌ Error during continued training: {e}")
         return
+
+
+def train_specialist_hard_mode(model_path, timesteps=10000000, model_name=None):
+    """Transform a curriculum graduate into a HARD mode specialist through ultra-low learning rate fine-tuning."""
+    
+    if model_name is None:
+        base_name = os.path.basename(model_path).replace('.zip', '')
+        timesteps_label = f"{timesteps//1000000}M" if timesteps >= 1000000 else f"{timesteps//1000}k"
+        model_name = f"{base_name}_specialist_hard_{timesteps_label}"
+    
+    print("🎯 SPECIALIST HARD MODE TRAINING")
+    print("=" * 60)
+    print(f"🎓 Base Model: {model_path}")
+    print(f"🎯 Target: HARD mode mastery (50%+ survival)")
+    print(f"📈 Timesteps: {timesteps:,}")
+    print(f"🧪 Mode: PRECISION FINE-TUNING")
+    print(f"💾 Output: {model_name}")
+    print("=" * 60)
+    print(f"🔬 SPECIALIST TRAINING PARAMETERS:")
+    print(f"   • Learning Rate: 5e-6 (ultra-low for precision)")
+    print(f"   • Entropy: 0.001 (minimal exploration)")
+    print(f"   • Environment: HARD-locked (no curriculum)")
+    print(f"   • Batch Size: 64 (stable gradients)")
+    print(f"   • Networks: Compact [128,128] (prevent overfitting)")
+    print(f"   • Training Style: Conservative fine-tuning")
+    print("=" * 60)
+    
+    try:
+        # STEP 1: First, inspect the base model to determine its environment configuration
+        print(f"🔍 Analyzing base model environment configuration...")
+        temp_model = PPO.load(model_path)
+        
+        # Extract observation space dimensions to determine flower count
+        obs_space = temp_model.observation_space
+        if hasattr(obs_space, 'spaces') and 'flowers' in obs_space.spaces:
+            flowers_shape = obs_space.spaces['flowers'].shape
+            original_flower_count = flowers_shape[0]  # First dimension is number of flowers
+            print(f"✅ Detected original flower count: {original_flower_count}")
+        else:
+            # Fallback to standard configuration
+            original_flower_count = 5
+            print(f"⚠️ Could not detect flower count, using default: {original_flower_count}")
+        
+        del temp_model  # Free memory
+        
+        # STEP 2: Create HARD-locked curriculum environment that MATCHES the original configuration
+        def make_specialist_env():
+            env = CurriculumHummingbirdEnv(
+                difficulty='hard',
+                auto_progress=False,  # LOCKED to HARD mode only
+                num_flowers=original_flower_count  # MATCH original model's flower count
+            )
+            env = Monitor(env, f"logs/specialist_hard_{get_next_training_number()}.monitor.csv")
+            return env
+        
+        # Create vector environment with same number as original model (2 envs for curriculum)
+        env = DummyVecEnv([make_specialist_env for _ in range(2)])  # Match original curriculum training
+        print(f"🎯 Created HARD-locked environment with {original_flower_count} flowers (matching original)")
+        
+        # STEP 3: Load the curriculum graduate model WITH the compatible environment
+        print(f"🔄 Loading curriculum graduate model with compatible environment...")
+        model = PPO.load(model_path, env=env)  # Load with compatible environment
+        print(f"✅ Model loaded successfully with matching observation space!")
+        
+        # Update model hyperparameters for specialist fine-tuning
+        print(f"⚙️ Configuring specialist hyperparameters...")
+        
+        # Create a linear schedule for ultra-low learning rate
+        ultra_low_lr = 5e-6
+        model.learning_rate = linear_schedule(ultra_low_lr)  # Use proper learning rate schedule
+        model.batch_size = 64       # Stable batch size
+        model.n_epochs = 4          # Conservative epochs
+        model.ent_coef = 0.001      # Minimal exploration (exploit learned skills)
+        # Use linear schedule for clip_range as well
+        model.clip_range = linear_schedule(0.1)  # Tighter clipping for stability
+        
+        print(f"🎯 Specialist hyperparameters configured:")
+        print(f"   • Learning Rate: {ultra_low_lr} (ultra-low)")
+        print(f"   • Batch Size: {model.batch_size}")
+        print(f"   • Entropy Coef: {model.ent_coef} (minimal)")
+        print(f"   • Clip Range: {model.clip_range} (conservative)")
+        print(f"   • Environment: HARD-locked curriculum")
+        
+        # Create specialist training callback with adjusted logging
+        class SpecialistTrainingCallback(Complex3DMatplotlibTrainingCallback):
+            """Callback for specialist training with HARD mode focus."""
+            
+            def __init__(self, log_freq=50000, training_num=1, total_timesteps=10000000, base_timesteps=0):
+                super().__init__(log_freq, training_num, total_timesteps, verbose=1)
+                self.survival_improvement_threshold = 40.0  # Target survival rate
+                self.best_hard_survival = 0.0
+                self.specialist_milestones = []
+                self.base_timesteps = base_timesteps  # Track starting timesteps from base model
+                
+            def _on_step(self) -> bool:
+                result = super()._on_step()
+                
+                # Override progress display for specialist training
+                if self.num_timesteps % self.log_freq == 0 and self.training_stats['episodes'] > 0:
+                    # Calculate specialist training progress (additional steps beyond base model)
+                    specialist_steps = self.num_timesteps - self.base_timesteps
+                    specialist_progress = (specialist_steps / self.total_timesteps) * 100
+                    
+                    # Create a shorter, more reasonable progress bar (10 segments instead of 20)
+                    progress_bar_length = 10
+                    progress_segments = min(int(specialist_progress // 10), progress_bar_length)
+                    progress_bar = "█" * progress_segments + "░" * (progress_bar_length - progress_segments)
+                    
+                    # Get recent statistics
+                    recent_episodes = min(100, len(self.training_stats['survival_rates']))
+                    if recent_episodes > 0:
+                        recent_rewards = self.training_stats['total_rewards'][-recent_episodes:]
+                        recent_survival = self.training_stats['survival_rates'][-recent_episodes:]
+                        recent_nectar = self.training_stats['nectar_collected'][-recent_episodes:]
+                        
+                        avg_reward = np.mean(recent_rewards)
+                        survival_rate = np.mean(recent_survival) * 100
+                        avg_nectar = np.mean(recent_nectar)
+                        
+                        print(f"🎯 Specialist #{self.training_num} | Step {self.num_timesteps:,} (+{specialist_steps:,}) [{progress_bar}] {specialist_progress:.1f}%")
+                        print(f"   📊 Reward {avg_reward:.1f} | Nectar {avg_nectar:.1f} | Survival {survival_rate:.0f}%")
+                        
+                        # Track specialist milestones
+                        if survival_rate > self.best_hard_survival:
+                            self.best_hard_survival = survival_rate
+                            
+                            # Check for specialist milestones
+                            milestones = [20, 30, 40, 50, 60, 70]
+                            for milestone in milestones:
+                                if survival_rate >= milestone and milestone not in [m['threshold'] for m in self.specialist_milestones]:
+                                    self.specialist_milestones.append({
+                                        'step': self.num_timesteps,
+                                        'threshold': milestone,
+                                        'survival_rate': survival_rate
+                                    })
+                                    print(f"\n🏆 SPECIALIST MILESTONE ACHIEVED!")
+                                    print(f"   🎯 HARD Mode Survival: {survival_rate:.1f}% (Target: {milestone}%)")
+                                    print(f"   📈 Step: {self.num_timesteps:,}")
+                                    
+                                    # Auto-save specialist milestones
+                                    if milestone >= 40:  # Save significant milestones
+                                        milestone_path = f"models/specialist_milestone_{milestone}pct_survival_{self.num_timesteps//1000}k.zip"
+                                        self.model.save(milestone_path)
+                                        print(f"   💾 Milestone model saved: {milestone_path}")
+                
+                return result
+        
+        # Get base timesteps from loaded model for proper progress calculation
+        base_timesteps = model.num_timesteps if hasattr(model, 'num_timesteps') else 0
+        
+        training_callback = SpecialistTrainingCallback(
+            log_freq=50000,  # Log every 50k steps (more frequent for specialist training)
+            training_num=get_next_training_number(),
+            total_timesteps=timesteps,
+            base_timesteps=base_timesteps
+        )
+        
+        print(f"\n🚀 Starting specialist HARD mode training...")
+        print(f"🎯 Goal: Transform {model_path} into HARD mode specialist")
+        print(f"📊 Progress logging every 50k steps")
+        print(f"🏆 Milestone auto-save at 20%, 30%, 40%, 50%+ survival")
+        print(f"⏹️ Press Ctrl+C to stop training safely")
+        print("=" * 60)
+        
+        # Start specialist training
+        model.learn(
+            total_timesteps=timesteps,
+            callback=training_callback,
+            reset_num_timesteps=False  # Continue from base model timesteps
+        )
+        
+        # Save the specialist model
+        model.save(f"./models/{model_name}")
+        model.save("./models/best_model")  # Update best model
+        
+        print(f"\n🎉 SPECIALIST TRAINING COMPLETED!")
+        print("=" * 60)
+        print(f"💾 Specialist model saved as: {model_name}.zip")
+        print(f"🥇 Best model updated: best_model.zip")
+        
+        # Final evaluation
+        if training_callback.specialist_milestones:
+            print(f"\n🏆 SPECIALIST MILESTONES ACHIEVED:")
+            for milestone in training_callback.specialist_milestones:
+                print(f"   • {milestone['threshold']}% survival at step {milestone['step']:,}")
+            print(f"🎯 Best HARD survival: {training_callback.best_hard_survival:.1f}%")
+        else:
+            print(f"🎯 Final HARD survival: {training_callback.best_hard_survival:.1f}%")
+        
+        # Save specialist training statistics
+        with open(f"models/{model_name}_specialist_stats.pkl", "wb") as f:
+            pickle.dump({
+                'training_stats': training_callback.training_stats,
+                'specialist_milestones': training_callback.specialist_milestones,
+                'best_hard_survival': training_callback.best_hard_survival,
+                'base_model': model_path,
+                'specialist_params': {
+                    'learning_rate': ultra_low_lr,  # Use the actual learning rate value
+                    'batch_size': 64,
+                    'ent_coef': 0.001,
+                    'clip_range': 0.1,
+                    'difficulty': 'hard_locked'
+                }
+            }, f)
+        
+        # Create specialist analysis
+        create_training_analysis_plots(training_callback.training_stats, model_name)
+        
+        print(f"📊 Specialist analysis saved")
+        print(f"🎓 Ready for evaluation!")
+        print("=" * 60)
+        
+        env.close()
+        return model, training_callback.training_stats
+        
+    except KeyboardInterrupt:
+        print("\n⚠️ Specialist training interrupted by user")
+        model.save(f"./models/{model_name}_interrupted")
+        return model, training_callback.training_stats if 'training_callback' in locals() else None
+    except Exception as e:
+        print(f"❌ Error during specialist training: {e}")
+        return None, None
 
 
 def view_training_progress():
@@ -1173,6 +2091,9 @@ def main():
         print("  1 - Train new model (500K timesteps)")
         print("  2 - Train new model (1M timesteps)")
         print("  custom <timesteps> - Train new model (custom timesteps)")
+        print("  stable <timesteps> - Train with stable hyperparameters (recommended for consistency)")
+        print("  curriculum <difficulty> <auto|manual> <timesteps> - Curriculum learning")
+        print("  specialist <model_path> <timesteps> - Transform curriculum graduate to HARD mode specialist")
         print("  3 - Test best model (3 episodes, with visualization)")
         print("  4 - Test specific model (provide path)")
         print("  5 - Comprehensive evaluation (100 episodes, no visualization)")
@@ -1218,7 +2139,21 @@ def main():
             print("Please provide model path")
             return
         model_path = sys.argv[2]
-        evaluate_model_comprehensive(model_path, render=False)  # Use default 100 episodes
+        
+        # Check if custom episode count is provided
+        num_episodes = 100  # default
+        if len(sys.argv) >= 4:
+            try:
+                num_episodes = int(sys.argv[3])
+                if num_episodes <= 0:
+                    print("Error: Number of episodes must be positive")
+                    return
+                print(f"🔬 Running extended evaluation with {num_episodes} episodes...")
+            except ValueError:
+                print("Warning: Invalid episode count, using default 100 episodes")
+                num_episodes = 100
+        
+        evaluate_model_comprehensive(model_path, num_episodes=num_episodes, render=False)
     elif action == "6":
         evaluate_all_models(show_plots=False)  # Headless evaluation for bulk processing
     elif action == "progress":
@@ -1226,7 +2161,8 @@ def main():
     elif action == "continue":
         if len(sys.argv) < 4:
             print("Please provide model path and additional timesteps")
-            print("Usage: python train.py continue <model_path> <additional_timesteps>")
+            print("Usage: python train.py continue <model_path> <additional_timesteps> [stable]")
+            print("Add 'stable' to use stable hyperparameters and survival rewards")
             return
         model_path = sys.argv[2]
         try:
@@ -1234,12 +2170,96 @@ def main():
             if additional_timesteps <= 0:
                 print("Error: Additional timesteps must be a positive number")
                 return
-            continue_training_model(model_path, additional_timesteps)
+            
+            # Check if stable parameters should be used
+            use_stable = len(sys.argv) > 4 and sys.argv[4].lower() == 'stable'
+            
+            continue_training_model(model_path, additional_timesteps, use_stable_params=use_stable)
+        except ValueError:
+            print("Error: Invalid timesteps number. Please provide a valid integer.")
+            return
+    elif action == "stable":
+        if len(sys.argv) < 3:
+            print("Please provide timesteps number for stable training")
+            print("Usage: python train.py stable <timesteps>")
+            return
+        try:
+            stable_timesteps = int(sys.argv[2])
+            if stable_timesteps <= 0:
+                print("Error: Timesteps must be a positive number")
+                return
+            print(f"⚖️ Starting stable training with {stable_timesteps:,} timesteps...")
+            train_stable_3d_matplotlib_ppo(timesteps=stable_timesteps)
+        except ValueError:
+            print("Error: Invalid timesteps number. Please provide a valid integer.")
+            return
+    elif action == "curriculum":
+        if len(sys.argv) < 5:
+            print("Please provide curriculum training parameters")
+            print("Usage: python train.py curriculum <difficulty> <auto|manual> <timesteps>")
+            print("Difficulties: beginner, easy, medium, hard")
+            print("Auto: enables auto-progression, Manual: stays at fixed difficulty")
+            return
+        
+        difficulty = sys.argv[2]
+        progression_mode = sys.argv[3]
+        
+        if difficulty not in ['beginner', 'easy', 'medium', 'hard']:
+            print("Error: Invalid difficulty. Choose: beginner, easy, medium, hard")
+            return
+        
+        if progression_mode not in ['auto', 'manual']:
+            print("Error: Invalid progression mode. Choose: auto, manual")
+            return
+        
+        try:
+            curriculum_timesteps = int(sys.argv[4])
+            if curriculum_timesteps <= 0:
+                print("Error: Timesteps must be a positive number")
+                return
+            
+            auto_progress = progression_mode == 'auto'
+            print(f"📚 Starting curriculum learning...")
+            print(f"🎓 Starting difficulty: {difficulty.upper()}")
+            print(f"📈 Auto-progression: {'ENABLED' if auto_progress else 'DISABLED'}")
+            print(f"🎯 Timesteps: {curriculum_timesteps:,}")
+            
+            train_curriculum_3d_matplotlib_ppo(
+                difficulty=difficulty,
+                auto_progress=auto_progress,
+                timesteps=curriculum_timesteps
+            )
+        except ValueError:
+            print("Error: Invalid timesteps number. Please provide a valid integer.")
+            return
+    elif action == "specialist":
+        if len(sys.argv) < 4:
+            print("Please provide model path and timesteps for specialist training")
+            print("Usage: python train.py specialist <model_path> <timesteps>")
+            print("Example: python train.py specialist models/best_model.zip 10000000")
+            return
+        
+        model_path = sys.argv[2]
+        if not os.path.exists(model_path):
+            print(f"Error: Model file not found: {model_path}")
+            return
+        
+        try:
+            specialist_timesteps = int(sys.argv[3])
+            if specialist_timesteps <= 0:
+                print("Error: Timesteps must be a positive number")
+                return
+            
+            print(f"🎯 Starting specialist HARD mode training...")
+            print(f"🎓 Base model: {model_path}")
+            print(f"📈 Timesteps: {specialist_timesteps:,}")
+            
+            train_specialist_hard_mode(model_path, timesteps=specialist_timesteps)
         except ValueError:
             print("Error: Invalid timesteps number. Please provide a valid integer.")
             return
     else:
-        print("Invalid action. Use 1, 2, custom, 3, 4, 5, 6, progress, or continue.")
+        print("Invalid action. Use 1, 2, custom, 3, 4, 5, 6, progress, continue, stable, curriculum, or specialist.")
 
 
 if __name__ == "__main__":

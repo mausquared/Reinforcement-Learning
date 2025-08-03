@@ -32,7 +32,7 @@ class ComplexHummingbird3DMatplotlibEnv(gym.Env):
         self.render_mode = render_mode
         self._debug_mode = debug_mode  # For milestone celebration messages
         
-        self.METABOLIC_COST = 0.2           # Reduced from 0.3
+        self.METABOLIC_COST = 0.18           # Reduced from 0.2
         self.MOVE_HORIZONTAL_COST = 0.8     # Reduced from 1.2  
         self.MOVE_UP_ENERGY_COST = 1.2      # Further reduced from 1.8 to 1.2 for better upper region access
         self.MOVE_DOWN_ENERGY_COST = 0.5    # Reduced from 0.8
@@ -61,6 +61,12 @@ class ComplexHummingbird3DMatplotlibEnv(gym.Env):
                 low=np.array([[0, 0, 0, 0, 0, 0]] * num_flowers), 
                 high=np.array([[grid_size-1, grid_size-1, max_height, self.MAX_NECTAR, self.FLOWER_COOLDOWN_TIME, 1]] * num_flowers),
                 shape=(num_flowers, 6), 
+                dtype=np.float32
+            ),
+            'environment': spaces.Box(
+                low=np.array([0.0, 0.0, 0.0, 0.0, 0.0, 0.0]), 
+                high=np.array([2.0, 10.0, 10.0, 10.0, 1.0, 200.0]), 
+                shape=(6,), 
                 dtype=np.float32
             )
         })
@@ -121,6 +127,9 @@ class ComplexHummingbird3DMatplotlibEnv(gym.Env):
         self.steps_taken = 0
         self.last_flower_visited = -1
         self.agent_trail = [self.agent_pos.copy()]
+        
+        # BREAKTHROUGH OPTIMIZATION: Track visited flowers for first-visit bonus
+        self.visited_flowers_this_episode = set()
         
         # NEW: Reset memory tracking
         self.last_flower_position = None
@@ -394,6 +403,13 @@ class ComplexHummingbird3DMatplotlibEnv(gym.Env):
             if self.flower_cooldowns[on_flower_idx] == 0:
                 nectar_available = self.flowers[on_flower_idx, 3]
                 if nectar_available > 0:
+                    # BREAKTHROUGH OPTIMIZATION: First-visit bonus for exploration
+                    if on_flower_idx not in self.visited_flowers_this_episode:
+                        reward += 5  # Balanced discovery bonus for new flowers
+                        self.visited_flowers_this_episode.add(on_flower_idx)
+                        if hasattr(self, '_debug_mode') and self._debug_mode:
+                            print(f"🎉 First visit to flower {on_flower_idx}! +5 discovery bonus.")
+                    
                     # Collect nectar (but not all at once to prevent infinite energy)
                     nectar_collected = min(nectar_available, 15)  # Max 15 nectar per visit
                     self.flowers[on_flower_idx, 3] -= nectar_collected
@@ -409,16 +425,16 @@ class ComplexHummingbird3DMatplotlibEnv(gym.Env):
                     self.total_nectar_collected += nectar_collected
                     reward += nectar_collected  # Direct reward for nectar collection
                 else:
-                    # Removed penalties for empty flowers - agent must learn this autonomously
+                    # BALANCED INCENTIVE: Penalty for visiting empty flowers (inefficiency)
+                    reward -= 2  # Small penalty for wasted trip to empty flower
                     if hasattr(self, '_debug_mode') and self._debug_mode:
-                        # Optional debug message
-                        if hasattr(self, '_debug_mode') and self._debug_mode:
-                            print(f"❌ Visited empty flower! Agent must learn from experience.")
+                        print(f"❌ Wasted trip to empty flower {on_flower_idx}! -2 penalty.")
             else:
-                # Agent must learn from consequences - no explicit penalty teaching
+                # BALANCED INCENTIVE: Penalty for visiting flowers on cooldown (inefficiency)
+                reward -= 2  # Small penalty for wasted trip to unavailable flower
                 if hasattr(self, '_debug_mode') and self._debug_mode:
                     cooldown_remaining = self.flower_cooldowns[on_flower_idx]
-                    print(f"❌ Visited flower on cooldown! Remaining: {cooldown_remaining} steps")
+                    print(f"❌ Wasted trip to flower {on_flower_idx} on cooldown! Remaining: {cooldown_remaining} steps. -2 penalty.")
         
         # Update flower cooldowns and regenerate nectar
         self.flower_cooldowns = np.maximum(0, self.flower_cooldowns - 1)
@@ -443,7 +459,7 @@ class ComplexHummingbird3DMatplotlibEnv(gym.Env):
         # Death from energy depletion - the challenge!
         if self.agent_energy <= 0:
             terminated = True
-            reward -= 50  # Big penalty for dying
+            reward -= 100  # Big penalty for dying
         
         # Success condition: survive for 300 steps
         if self.steps_taken >= 300:
@@ -541,9 +557,20 @@ class ComplexHummingbird3DMatplotlibEnv(gym.Env):
             
         enhanced_flowers = np.array(enhanced_flowers, dtype=np.float32)
         
+        # Environment parameters - help agent adapt to difficulty changes
+        environment_obs = np.array([
+            self.METABOLIC_COST,        # Base energy cost per step
+            self.MOVE_HORIZONTAL_COST,  # Movement cost horizontal
+            self.MOVE_VERTICAL_COST,    # Movement cost vertical  
+            self.GRAVITY_COST,          # Gravity cost per step
+            self.flower_radius,         # Flower interaction radius
+            self.max_energy            # Maximum energy capacity
+        ], dtype=np.float32)
+        
         return {
             'agent': agent_obs,
-            'flowers': enhanced_flowers
+            'flowers': enhanced_flowers,
+            'environment': environment_obs
         }
     
     def _calculate_efficiency_bonus(self):
@@ -824,5 +851,358 @@ def test_complex_3d_matplotlib_environment():
     print("3D Matplotlib environment test completed!")
 
 
+class CurriculumHummingbirdEnv(ComplexHummingbird3DMatplotlibEnv):
+    """
+    Curriculum Learning Environment for Progressive Training
+    
+    Supports 4 difficulty levels:
+    - Beginner: Large flowers, high energy, slow decay
+    - Easy: Slightly harder than beginner
+    - Medium: Standard environment
+    - Hard: Small flowers, low energy, fast decay
+    
+    Auto-progression based on performance thresholds.
+    """
+    
+    def __init__(self, difficulty='beginner', auto_progress=True, **kwargs):
+        """
+        Initialize curriculum environment.
+        
+        Args:
+            difficulty: 'beginner', 'easy', 'medium', 'hard'
+            auto_progress: Whether to automatically advance difficulty
+            **kwargs: Additional environment parameters
+        """
+        self.difficulty = difficulty
+        self.auto_progress = auto_progress
+        self.performance_history = []
+        self.episodes_at_difficulty = 0
+        self._last_printed_difficulty = None  # Track when we last printed settings
+        
+        # ENHANCED: Stricter progression thresholds for mastery, not just passing
+        self.progression_thresholds = {
+            'beginner': {
+                'survival_rate': 0.70,      # Higher target: 70% survival 
+                'min_episodes': 100,        # Longer evaluation: 100 episodes
+                'consistency_window': 50    # Must maintain 70%+ over last 50 episodes
+            },
+            'easy': {
+                'survival_rate': 0.60,      # Higher target: 60% survival
+                'min_episodes': 150,        # Longer evaluation: 150 episodes  
+                'consistency_window': 75    # Must maintain 60%+ over last 75 episodes
+            },
+            'medium': {
+                'survival_rate': 0.50,      # Higher target: 50% survival
+                'min_episodes': 200,        # Longer evaluation: 200 episodes
+                'consistency_window': 100   # Must maintain 50%+ over last 100 episodes
+            },
+            'pre_hard': {               # NEW: Bridge stage to prevent difficulty cliff
+                'survival_rate': 0.45,      # Challenging but achievable: 45% survival
+                'min_episodes': 175,        # Substantial evaluation: 175 episodes
+                'consistency_window': 85    # Must maintain 45%+ over last 85 episodes
+            },
+            'hard': {
+                'survival_rate': 0.40,      # Ultimate mastery: 40% survival
+                'min_episodes': 250,        # Extensive evaluation
+                'consistency_window': 125   # Must maintain 40%+ over last 125 episodes
+            }
+        }
+        
+        # Track recent performance for consistency checking
+        from collections import deque
+        self.recent_survival = deque(maxlen=200)  # Track last 200 episodes
+        
+        # Adjust number of flowers based on difficulty for optimal learning
+        if difficulty == 'beginner':
+            kwargs.setdefault('num_flowers', 8)  # MORE flowers for pathfinding practice
+        elif difficulty == 'easy':
+            kwargs.setdefault('num_flowers', 6)  # Slightly more than standard
+        else:
+            kwargs.setdefault('num_flowers', 5)  # Standard or challenging
+        
+        # Initialize with difficulty settings
+        super().__init__(**kwargs)
+        self.apply_difficulty_settings()
+        
+        print(f"📚 Curriculum Learning Initialized - Difficulty: {self.difficulty.upper()}")
+        print(f"🌸 Flowers: {kwargs.get('num_flowers', 5)} | Energy: {getattr(self, 'max_energy', 100)}")
+        print(f"🎯 MASTERY Target: {self.progression_thresholds[self.difficulty]['survival_rate']*100:.0f}% survival over {self.progression_thresholds[self.difficulty]['min_episodes']} episodes")
+        print(f"📊 Consistency Required: {self.progression_thresholds[self.difficulty]['survival_rate']*100:.0f}%+ over last {self.progression_thresholds[self.difficulty]['consistency_window']} episodes")
+    
+    def apply_difficulty_settings(self):
+        """Apply settings based on current difficulty level."""
+        if self.difficulty == 'beginner':
+            # LEARNING ENVIRONMENT: High margin for error, skill discovery focus
+            self.max_energy = 180.0                # Massive energy buffer for exploration
+            self.initial_energy = 180.0
+            self.METABOLIC_COST = 0.08             # Very slow decay (more time to think)
+            self.MOVE_HORIZONTAL_COST = 0.4        # Cheap movement for pathfinding practice
+            self.MOVE_UP_ENERGY_COST = 0.6         # Cheap vertical movement
+            self.MOVE_DOWN_ENERGY_COST = 0.2
+            self.HOVER_ENERGY_COST = 1.2           # Cheap hovering for observation
+            self.flower_radius = 1.2               # Large flowers (easy to find)
+            self.NECTAR_GAIN = 45                  # High reward for success
+            self.NECTAR_REGEN_RATE = 0.8           # Fast regeneration for cooldown learning
+            self.FLOWER_COOLDOWN_TIME = 8          # Short cooldowns for strategy practice
+            # SKILL FOCUS: Agent can afford to make mistakes while learning:
+            # - Efficient pathfinding between multiple flowers
+            # - Cooldown timing and management
+            # - Strategic retreat and energy conservation
+            
+        elif self.difficulty == 'easy':
+            # Slightly more challenging
+            self.max_energy = 120.0
+            self.initial_energy = 120.0
+            self.METABOLIC_COST = 0.12
+            self.MOVE_HORIZONTAL_COST = 0.6
+            self.MOVE_UP_ENERGY_COST = 1.0
+            self.MOVE_DOWN_ENERGY_COST = 0.4
+            self.HOVER_ENERGY_COST = 1.8
+            self.flower_radius = 0.7               # Medium-large flowers
+            self.NECTAR_GAIN = 37
+            self.NECTAR_REGEN_RATE = 0.4
+            self.FLOWER_COOLDOWN_TIME = 12
+            
+        elif self.difficulty == 'medium':
+            # Standard environment (your current settings)
+            self.max_energy = 100.0
+            self.initial_energy = 100.0
+            self.METABOLIC_COST = 0.18
+            self.MOVE_HORIZONTAL_COST = 0.8
+            self.MOVE_UP_ENERGY_COST = 1.2
+            self.MOVE_DOWN_ENERGY_COST = 0.5
+            self.HOVER_ENERGY_COST = 2.2
+            self.flower_radius = 0.5               # Standard flowers
+            self.NECTAR_GAIN = 35
+            self.NECTAR_REGEN_RATE = 0.3
+            self.FLOWER_COOLDOWN_TIME = 15
+            
+        elif self.difficulty == 'pre_hard':
+            # BRIDGE STAGE: Intermediate difficulty to prevent cliff between medium and hard
+            self.max_energy = 90.0                 # Halfway between medium (100) and hard (80)
+            self.initial_energy = 90.0
+            self.METABOLIC_COST = 0.21             # Halfway between medium (0.18) and hard (0.25)
+            self.MOVE_HORIZONTAL_COST = 0.9        # Halfway between medium (0.8) and hard (1.0)
+            self.MOVE_UP_ENERGY_COST = 1.5         # Halfway between medium (1.2) and hard (1.8)
+            self.MOVE_DOWN_ENERGY_COST = 0.55
+            self.HOVER_ENERGY_COST = 2.6           # Halfway between medium (2.2) and hard (3.0)
+            self.flower_radius = 0.4               # Halfway between medium (0.5) and hard (0.3)
+            self.NECTAR_GAIN = 32                  # Slightly reduced reward
+            self.NECTAR_REGEN_RATE = 0.25          # Slightly slower than medium
+            self.FLOWER_COOLDOWN_TIME = 18         # Slightly longer cooldowns
+            
+        elif self.difficulty == 'hard':
+            # Challenging environment for advanced agents
+            self.max_energy = 80.0
+            self.initial_energy = 80.0
+            self.METABOLIC_COST = 0.25             # Fast energy decay
+            self.MOVE_HORIZONTAL_COST = 1.0        # Expensive movement
+            self.MOVE_UP_ENERGY_COST = 1.8         # Very expensive vertical movement
+            self.MOVE_DOWN_ENERGY_COST = 0.6
+            self.HOVER_ENERGY_COST = 3.0           # Very expensive hovering
+            self.flower_radius = 0.3               # Small flowers (hard to find)
+            self.NECTAR_GAIN = 30                  # Less energy from nectar
+            self.NECTAR_REGEN_RATE = 0.2           # Slow flower regeneration
+            self.FLOWER_COOLDOWN_TIME = 20         # Long cooldowns
+        
+        # ADD MISSING ATTRIBUTES for enhanced observation space compatibility
+        # Calculate average vertical movement cost for observation space
+        self.MOVE_VERTICAL_COST = (self.MOVE_UP_ENERGY_COST + self.MOVE_DOWN_ENERGY_COST) / 2
+        self.GRAVITY_COST = 0.0  # Set to 0 for curriculum environment (no gravity in current implementation)
+        
+        # Update energy-related attributes
+        self.agent_energy = self.initial_energy
+        
+        # Only print difficulty settings when difficulty actually changes
+        if self._last_printed_difficulty != self.difficulty:
+            print(f"📊 Difficulty Settings Applied: {self.difficulty.upper()}")
+            print(f"   Energy: {self.max_energy} | Flower radius: {self.flower_radius}")
+            print(f"   Movement cost: {self.MOVE_HORIZONTAL_COST} | Metabolic cost: {self.METABOLIC_COST}")
+            self._last_printed_difficulty = self.difficulty
+        
+    def reset(self, seed=None, options=None):
+        """Reset environment and check for difficulty progression."""
+        self.episodes_at_difficulty += 1
+        
+        # Check for difficulty progression
+        if self.auto_progress and len(self.performance_history) >= 10:
+            self._check_progression()
+        
+        # Apply current difficulty settings
+        self.apply_difficulty_settings()
+        
+        # Reset using parent class
+        return super().reset(seed=seed, options=options)
+    
+    def step(self, action):
+        """Step environment and track performance."""
+        obs, reward, terminated, truncated, info = super().step(action)
+        
+        # Track episode completion for curriculum progression
+        if terminated or truncated:
+            survived = not terminated  # True if episode completed without dying
+            self.recent_survival.append(1 if survived else 0)  # Track for consistency
+            
+            self.performance_history.append({
+                'survived': survived,
+                'reward': info.get('episode_reward', reward),
+                'length': info.get('episode_length', self.steps_taken),
+                'nectar_collected': info.get('total_nectar_collected', 0),
+                'difficulty': self.difficulty
+            })
+            
+            # Keep only recent performance (last 200 episodes)
+            if len(self.performance_history) > 200:
+                self.performance_history = self.performance_history[-200:]
+        
+        return obs, reward, terminated, truncated, info
+    
+    def _check_progression(self):
+        """Check if agent has achieved MASTERY (not just passing) at current difficulty."""
+        if self.difficulty == 'hard':
+            return  # No progression after hard mode
+        
+        threshold = self.progression_thresholds[self.difficulty]
+        min_episodes = threshold['min_episodes']
+        target_survival = threshold['survival_rate']
+        consistency_window = threshold['consistency_window']
+        
+        # Need enough episodes at current difficulty
+        if self.episodes_at_difficulty < min_episodes:
+            return
+        
+        # Check overall performance over minimum episodes
+        recent_episodes = [ep for ep in self.performance_history[-min_episodes:] 
+                          if ep['difficulty'] == self.difficulty]
+        
+        if len(recent_episodes) < min_episodes:
+            return
+        
+        overall_survival = sum(ep['survived'] for ep in recent_episodes) / len(recent_episodes)
+        
+        # STRICT MASTERY CHECK: Must also show consistency in recent performance
+        if len(self.recent_survival) >= consistency_window:
+            recent_consistency = sum(list(self.recent_survival)[-consistency_window:]) / consistency_window
+        else:
+            recent_consistency = 0.0
+        
+        # BOTH criteria must be met for progression
+        overall_mastery = overall_survival >= target_survival
+        recent_consistency_check = recent_consistency >= target_survival
+        
+        if overall_mastery and recent_consistency_check:
+            print(f"\n🎓 MASTERY ACHIEVED! Progressing from {self.difficulty.upper()}")
+            print(f"   📊 Overall Performance: {overall_survival*100:.1f}% over {min_episodes} episodes")
+            print(f"   🎯 Recent Consistency: {recent_consistency*100:.1f}% over last {consistency_window} episodes")
+            self._progress_difficulty()
+        else:
+            # Provide feedback on progress toward mastery
+            if self.episodes_at_difficulty % 50 == 0:  # Every 50 episodes
+                print(f"📈 {self.difficulty.upper()} Progress: Overall {overall_survival*100:.1f}% | Recent {recent_consistency*100:.1f}% (need {target_survival*100:.1f}%+)")
+    
+    def _progress_difficulty(self):
+        """Advance to next difficulty level."""
+        difficulty_levels = ['beginner', 'easy', 'medium', 'pre_hard', 'hard']
+        current_index = difficulty_levels.index(self.difficulty)
+        
+        if current_index < len(difficulty_levels) - 1:
+            old_difficulty = self.difficulty
+            self.difficulty = difficulty_levels[current_index + 1]
+            self.episodes_at_difficulty = 0
+            self._last_printed_difficulty = None  # Reset to force printing new difficulty
+            
+            # Celebration message
+            print(f"\n🎓 CURRICULUM PROGRESSION!")
+            print(f"🎉 Advanced from {old_difficulty.upper()} to {self.difficulty.upper()}")
+            print(f"🎯 New target: {self.progression_thresholds[self.difficulty]['survival_rate']*100:.0f}% survival")
+            print(f"📈 Episodes needed: {self.progression_thresholds[self.difficulty]['min_episodes']}")
+            print(f"💪 Challenge increased - agent is learning!")
+            
+            # Apply new difficulty settings immediately
+            self.apply_difficulty_settings()
+    
+    def get_curriculum_status(self):
+        """Get current curriculum learning status."""
+        if len(self.performance_history) == 0:
+            return {
+                'difficulty': self.difficulty,
+                'episodes_at_difficulty': self.episodes_at_difficulty,
+                'survival_rate': 0.0,
+                'progress_to_next': 0.0
+            }
+        
+        # Calculate recent survival rate
+        recent_episodes = [ep for ep in self.performance_history[-50:] 
+                          if ep['difficulty'] == self.difficulty]
+        
+        if len(recent_episodes) == 0:
+            survival_rate = 0.0
+        else:
+            survival_rate = sum(ep['survived'] for ep in recent_episodes) / len(recent_episodes)
+        
+        # Calculate progress toward next level
+        if self.difficulty in self.progression_thresholds:
+            target_survival = self.progression_thresholds[self.difficulty]['survival_rate']
+            min_episodes = self.progression_thresholds[self.difficulty]['min_episodes']
+            
+            episode_progress = min(1.0, self.episodes_at_difficulty / min_episodes)
+            survival_progress = min(1.0, survival_rate / target_survival)
+            progress_to_next = min(episode_progress, survival_progress)
+        else:
+            progress_to_next = 1.0  # Hard mode - no next level
+        
+        return {
+            'difficulty': self.difficulty,
+            'episodes_at_difficulty': self.episodes_at_difficulty,
+            'survival_rate': survival_rate,
+            'progress_to_next': progress_to_next,
+            'target_survival': self.progression_thresholds.get(self.difficulty, {}).get('survival_rate', 0),
+            'min_episodes_needed': self.progression_thresholds.get(self.difficulty, {}).get('min_episodes', 0)
+        }
+    
+    def force_difficulty(self, difficulty):
+        """Manually set difficulty level (for testing)."""
+        if difficulty in ['beginner', 'easy', 'medium', 'hard']:
+            self.difficulty = difficulty
+            self.episodes_at_difficulty = 0
+            self._last_printed_difficulty = None  # Reset to force printing new difficulty
+            self.apply_difficulty_settings()
+            print(f"🔧 Manually set difficulty to: {difficulty.upper()}")
+        else:
+            print(f"❌ Invalid difficulty: {difficulty}")
+
+
+def test_curriculum_environment():
+    """Test the curriculum learning environment."""
+    print("📚 Testing Curriculum Learning Environment")
+    print("=" * 60)
+    
+    # Test all difficulty levels
+    difficulties = ['beginner', 'easy', 'medium', 'hard']
+    
+    for difficulty in difficulties:
+        print(f"\n🧪 Testing {difficulty.upper()} difficulty:")
+        
+        env = CurriculumHummingbirdEnv(difficulty=difficulty, auto_progress=False)
+        obs, info = env.reset()
+        
+        # Test a few steps
+        for i in range(5):
+            action = env.action_space.sample()
+            obs, reward, terminated, truncated, info = env.step(action)
+            if terminated or truncated:
+                break
+        
+        # Get status
+        status = env.get_curriculum_status()
+        print(f"   Status: {status}")
+        
+        env.close()
+    
+    print("\n✅ Curriculum environment test completed!")
+
+
 if __name__ == "__main__":
     test_complex_3d_matplotlib_environment()
+    print("\n" + "="*60)
+    test_curriculum_environment()

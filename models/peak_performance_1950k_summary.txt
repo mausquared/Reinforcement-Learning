@@ -1,0 +1,8 @@
+Peak Performance Model Summary
+Saved at timestep: 1,950,000
+Survival rate: 40.0%
+Average reward: 864.0
+Save reason: New reward peak: 864.0 (survival: 40.0%)
+Timestamp: 2025-08-02 23:28:37.487941
+Training session: #28
+Models saved so far: 3
