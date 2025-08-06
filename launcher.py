@@ -40,9 +40,10 @@ def main():
     print("15. 📚 Curriculum Learning Training (Progressive difficulty)")
     print("16. 🎓🚀 Continue Mastery Model with Enhanced Curriculum")
     print("17. 🎯🔥 Specialist HARD Mode Training (Transform graduate to expert)")
+    print("18. 🏆 Evaluate Top Performers (1000 episodes each with statistics)")
     print("0. ❌ Exit")
     
-    choice = input("\nEnter your choice (0-17): ").strip()
+    choice = input("\nEnter your choice (0-18): ").strip()
     
     if choice == "1":
         print("\n🎮 Testing 3D Environment...")
@@ -1160,12 +1161,41 @@ def main():
             print("❌ Models directory not found.")
             print("   Please train a model first.")
             
+    elif choice == "18":
+        print("\n🏆 Evaluating Top Performers...")
+        print("=" * 60)
+        print("📊 Comprehensive statistical evaluation of your best models")
+        print("🎯 1000 episodes each (10 runs × 100 episodes)")
+        print("📈 Generates confidence intervals, variance analysis, and rankings")
+        print("🔬 Perfect for identifying your most reliable high-performers")
+        print("\n💡 Target Models:")
+        print("   • peak_performance_4200k_survival_42.0%")
+        print("   • peak_performance_3950k_survival_41.0%")
+        print("   • peak_performance_5050k_survival_41.0%")
+        print("   • stable_autonomous_28_14000k_stable")
+        print("   • peak_performance_4200k_survival_39.0%")
+        print("   • peak_performance_1600k_survival_41.0%")
+        print("   • peak_performance_300k_survival_35.0%")
+        print("   • peak_performance_1400k_survival_42.0%")
+        
+        print("\n⏱️ Estimated time: 30-60 minutes for all models")
+        print("📊 Outputs: CSV data, JSON results, and visualizations")
+        
+        confirm = input("\nStart comprehensive top performers evaluation? (y/n): ").strip().lower()
+        if confirm == 'y':
+            print("\n🚀 Starting comprehensive evaluation...")
+            print("📊 This will run 8000 total episodes across your top models")
+            print("🎯 Results will be saved in evaluation_results/ directory")
+            subprocess.run([PYTHON_PATH, "evaluate_top_performers.py"])
+        else:
+            print("Evaluation cancelled.")
+    
     elif choice == "0":
         print("\n�👋 Goodbye!")
         sys.exit(0)
         
     else:
-        print("\n❌ Invalid choice. Please enter 0-17.")
+        print("\n❌ Invalid choice. Please enter 0-18.")
     
     # Ask if user wants to continue
     print("\n" + "=" * 45)

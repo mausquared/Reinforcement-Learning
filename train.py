@@ -12,6 +12,7 @@ from datetime import datetime
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 import torch.nn as nn
+from gymnasium import spaces
 
 from stable_baselines3 import PPO
 from stable_baselines3.common.env_util import make_vec_env
@@ -229,6 +230,77 @@ def create_stable_3d_matplotlib_env(render_mode=None):
     
     class StableHummingbirdEnv(ComplexHummingbird3DMatplotlibEnv):
         """Enhanced environment with survival rewards for stable training."""
+        
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            
+            # Ensure all required attributes exist for compatibility
+            # Add missing movement cost attributes that might be referenced in _get_observation
+            if not hasattr(self, 'MOVE_VERTICAL_COST'):
+                self.MOVE_VERTICAL_COST = getattr(self, 'MOVE_UP_ENERGY_COST', 1.0)
+            
+            if not hasattr(self, 'MOVE_HORIZONTAL_COST'):
+                self.MOVE_HORIZONTAL_COST = getattr(self, 'MOVE_ENERGY_COST', 0.5)
+            
+            # Ensure all environment parameters exist
+            if not hasattr(self, 'FLOWER_COOLDOWN_TIME'):
+                self.FLOWER_COOLDOWN_TIME = getattr(self, 'flower_cooldown_time', 10)
+            
+            if not hasattr(self, 'NECTAR_REWARD'):
+                self.NECTAR_REWARD = getattr(self, 'nectar_reward', 10)
+            
+            if not hasattr(self, 'ENERGY_DECAY_RATE'):
+                self.ENERGY_DECAY_RATE = getattr(self, 'METABOLIC_COST', 0.1)
+            
+            if not hasattr(self, 'GRAVITY_COST'):
+                self.GRAVITY_COST = getattr(self, 'gravity_cost', 0.2)
+            
+            # Override observation space to match stable models (no 'environment' key)
+            self.observation_space = spaces.Dict({
+                'agent': spaces.Box(
+                    low=np.array([0, 0, 0, 0]), 
+                    high=np.array([self.grid_size-1, self.grid_size-1, self.max_height, self.max_energy]), 
+                    shape=(4,), 
+                    dtype=np.float32
+                ),
+                'flowers': spaces.Box(
+                    low=np.array([[0, 0, 0, 0, 0, 0]] * self.num_flowers), 
+                    high=np.array([[self.grid_size-1, self.grid_size-1, self.max_height, self.MAX_NECTAR, self.FLOWER_COOLDOWN_TIME, 1]] * self.num_flowers),
+                    shape=(self.num_flowers, 6), 
+                    dtype=np.float32
+                )
+            })
+        
+        def _get_observation(self):
+            """Get stable-compatible observation (only agent and flowers, no environment key)."""
+            # Create observation directly without calling parent to avoid missing attributes
+            agent_obs = np.array([
+                self.agent_pos[0],     # X position
+                self.agent_pos[1],     # Y position  
+                self.agent_pos[2],     # Z position (altitude)
+                self.agent_energy      # Current energy
+            ], dtype=np.float32)
+            
+            # Enhanced flower observations - same format as base environment
+            enhanced_flowers = []
+            for i, flower in enumerate(self.flowers):
+                flower_obs = [
+                    flower[0],                           # X position
+                    flower[1],                           # Y position
+                    flower[2],                           # Z position
+                    flower[3],                           # Nectar amount
+                    self.flower_cooldowns[i],            # Cooldown remaining
+                    1.0 if flower[3] > 0 and self.flower_cooldowns[i] == 0 else 0.0  # Available flag
+                ]
+                enhanced_flowers.append(flower_obs)
+            
+            enhanced_flowers = np.array(enhanced_flowers, dtype=np.float32)
+            
+            # Return only agent and flowers (no environment key for stable models)
+            return {
+                'agent': agent_obs,
+                'flowers': enhanced_flowers
+            }
         
         def step(self, action):
             """Enhanced step function with survival rewards."""
@@ -479,7 +551,7 @@ def train_stable_3d_matplotlib_ppo(timesteps=2000000, model_name=None):
     print(f"   📈 Learning rate schedule: 3e-4 → 0 (linear decay)")
     print(f"   📊 Rollout buffer size: {n_envs * n_steps_per_env} steps")
     print(f"   🎯 Observation normalization: ENABLED")
-    print(f"   🔍 Balanced incentive optimizations:")
+    print(f"   [INFO] Balanced incentive optimizations:")
     print(f"      • First-visit bonus: +5 reward for flower discovery (reduced from +25)")
     print(f"      • Inefficiency penalty: -2 reward for visiting unavailable flowers")
     print(f"      • Enhanced exploration: ent_coef = 0.01 (2x increase)")
@@ -1075,7 +1147,7 @@ def create_environment_for_model(model_path, render_mode=None):
 def evaluate_model_comprehensive(model_path, num_episodes=100, render=False):
     """Comprehensive evaluation of a model with detailed statistics and environment compatibility."""
     
-    print(f"🔍 Comprehensive Evaluation: {model_path}")
+    print(f"[EVAL] Comprehensive Evaluation: {model_path}")
     print(f"Running {num_episodes} episodes for detailed statistics...")
     
     # Determine environment version and warn if incompatible
@@ -1327,7 +1399,7 @@ def evaluate_all_models(show_plots=False):
         show_plots (bool): If True, shows matplotlib comparison plots. If False, runs completely headless.
     """
     
-    print("🔍 EVALUATING ALL MODELS")
+    print("[EVAL] EVALUATING ALL MODELS")
     print("=" * 50)
     
     models_dir = "models"
@@ -1756,7 +1828,7 @@ def train_specialist_hard_mode(model_path, timesteps=10000000, model_name=None):
     
     try:
         # STEP 1: First, inspect the base model to determine its environment configuration
-        print(f"🔍 Analyzing base model environment configuration...")
+        print(f"[ANALYSIS] Analyzing base model environment configuration...")
         temp_model = PPO.load(model_path)
         
         # Extract observation space dimensions to determine flower count
