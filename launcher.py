@@ -309,14 +309,15 @@ def main():
             
     elif choice == "10":
         print("\n⚖️ Stable Training Configuration...")
-        print("🎯 NOW WITH BALANCED INCENTIVE SYSTEM!")
         print("📊 Uses conservative hyperparameters for consistent learning")
-        print("� Balanced incentives to prevent reward hacking:")
-        print("   • Discovery bonus: +5 (down from +25 to prevent bonus chasing)")
-        print("   • Inefficiency penalty: -2 (discourages wasted trips)")
-        print("   • Enhanced exploration: Higher entropy coefficient")
-        print("   • Long-term thinking: Higher gamma (0.995)")
-        print("🤖 Maintains autonomous strategy discovery with smart incentives")
+        print("⚠️  NOTE: Uses SAME ENVIRONMENT as autonomous learning")
+        print("🔧 Hyperparameter improvements:")
+        print("   • Learning rate schedule: 3e-4 → 0 (linear decay)")
+        print("   • Larger rollout buffer: 4096 steps")
+        print("   • Observation normalization: ENABLED")
+        print("   • Enhanced exploration: ent_coef = 0.01")
+        print("   • Long-term thinking: gamma = 0.995")
+        print("🤖 Same reward structure as autonomous learning, better training stability")
         
         while True:
             try:
@@ -345,17 +346,17 @@ def main():
                 else:
                     time_estimate = f"~{estimated_minutes/60:.1f} hours"
                 
-                print(f"\n📋 STABLE TRAINING WITH BALANCED INCENTIVES:")
+                print(f"\n📋 STABLE TRAINING WITH IMPROVED HYPERPARAMETERS:")
                 print(f"   🎯 Timesteps: {custom_timesteps:,} ({readable})")
-                print(f"   � Learning rate schedule: 3e-4 → 0 (linear decay)")
+                print(f"   📊 Learning rate schedule: 3e-4 → 0 (linear decay)")
                 print(f"   📊 Larger rollout buffer: 4096 steps")
                 print(f"   🎯 Observation normalization: ENABLED")
-                print(f"   🔍 Balanced incentive system:")
-                print(f"      • Discovery bonus: +5 (prevents bonus chasing)")
-                print(f"      • Inefficiency penalty: -2 (teaches memory)")
+                print(f"   � Hyperparameter improvements:")
                 print(f"      • Enhanced exploration: ent_coef = 0.01")
                 print(f"      • Long-term thinking: gamma = 0.995")
-                print(f"   🤖 Smart autonomous strategy discovery")
+                print(f"      • Conservative learning for stability")
+                print(f"   🤖 Environment: Same as autonomous learning")
+                print(f"   ⚠️  Reward structure: Unchanged from base environment")
                 print(f"   ⏱️  Estimated time: {time_estimate}")
                 
                 confirm = input("\nStart stable training? (y/n): ").strip().lower()
