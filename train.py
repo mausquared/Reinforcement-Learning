@@ -66,8 +66,8 @@ class Complex3DMatplotlibTrainingCallback(BaseCallback):
             self.training_stats['episode_lengths'].append(self.current_episode_length)
             self.training_stats['nectar_collected'].append(self.episode_nectar)
             
-            # Survival rate (episodes that reach 300 steps = success!)
-            survival = 1 if self.current_episode_length >= 300 else 0
+            # Survival rate (episodes that reach 200 steps = success!)
+            survival = 1 if self.current_episode_length >= 200 else 0
             self.training_stats['survival_rates'].append(survival)
             
             # Altitude statistics
@@ -139,7 +139,7 @@ class SurvivalModelSaver(BaseCallback):
             # Calculate survival rate over the last 100 episodes
             if len(self.episode_lengths) >= 20: # Only start after 20 episodes
                 recent_episodes = self.episode_lengths[-100:]
-                survival_rate = np.mean([1 if length >= 300 else 0 for length in recent_episodes]) * 100
+                survival_rate = np.mean([1 if length >= 200 else 0 for length in recent_episodes]) * 100
                 
                 if survival_rate > self.best_survival_rate:
                     old_best = self.best_survival_rate
@@ -168,7 +168,7 @@ def create_3d_matplotlib_env():
     """Create a 3D matplotlib hummingbird environment for training."""
     return ComplexHummingbird3DMatplotlibEnv(
         grid_size=10,
-        num_flowers=5,
+        num_flowers=8,
         max_energy=100,
         max_height=8,
         render_mode=None  # No rendering during training for speed
@@ -227,8 +227,8 @@ def train_complex_3d_matplotlib_ppo(timesteps=500000, model_name=None):
     eval_env = Monitor(create_3d_matplotlib_env())
     
     # Learning rate and clip range annealing for stability over long training
-    # lr starts at 5e-4 and linearly decays to 1e-5 over the entire training
-    lr_schedule = get_linear_fn(5e-4, 1e-5, 1.0)
+    # lr starts at 3e-4 and linearly decays to 1e-6 over the entire training
+    lr_schedule = get_linear_fn(3e-4, 1e-6, 1.0)
     # clip range starts at 0.2 and linearly decays to 0.1 over the entire training
     clip_schedule = get_linear_fn(0.2, 0.1, 1.0)
     
@@ -438,7 +438,7 @@ def test_trained_model_3d_matplotlib(model_path, num_episodes=10, render=True):
     # Create test environment with rendering
     env = ComplexHummingbird3DMatplotlibEnv(
         grid_size=10,
-        num_flowers=5,
+        num_flowers=8,
         max_energy=100,
         max_height=8,
         render_mode="matplotlib" if render else None
@@ -537,7 +537,7 @@ def create_environment_for_model(model_path, render_mode=None):
         print(f"   📊 Using AUTONOMOUS LEARNING environment (minimal rewards)")
         return ComplexHummingbird3DMatplotlibEnv(
             grid_size=10,
-            num_flowers=5,
+            num_flowers=8,
             max_energy=100,
             max_height=8,
             render_mode=render_mode
@@ -551,7 +551,7 @@ def create_environment_for_model(model_path, render_mode=None):
         # but clearly mark the results as incompatible
         return ComplexHummingbird3DMatplotlibEnv(
             grid_size=10,
-            num_flowers=5,
+            num_flowers=8,
             max_energy=100,
             max_height=8,
             render_mode=render_mode
@@ -710,7 +710,7 @@ def create_evaluation_plots(model_path, episode_rewards, episode_lengths, nectar
     axes[1, 0].grid(True, alpha=0.3)
     
     # 5. Final Energy vs Nectar Collection
-    colors = ['red' if length < 300 else 'green' for length in episode_lengths]
+    colors = ['red' if length < 200 else 'green' for length in episode_lengths]
     axes[1, 1].scatter(final_energies, nectar_totals, c=colors, alpha=0.7, s=50)
     axes[1, 1].set_title('Final Energy vs Nectar (Red=Died, Green=Survived)')
     axes[1, 1].set_xlabel('Final Energy')

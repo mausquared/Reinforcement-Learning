@@ -7,9 +7,18 @@ Simple launcher for the 3D matplotlib hummingbird environment
 import os
 import sys
 import subprocess
+import re  # Import the regular expressions module
 
 # Python executable path for this virtual environment
 PYTHON_PATH = "C:/Users/mdnva/OneDrive/Desktop/Projects/Reinforcement-Learning/.venv/Scripts/python.exe"
+
+def get_timesteps_from_filename(filename):
+    """Extracts the number of thousands of timesteps from a model filename."""
+    # Handles formats like 'name_5000k.zip'
+    match = re.search(r'_(\d+)[kK]\.zip$', filename)
+    if match:
+        return int(match.group(1)) * 1000
+    return 0
 
 def main():
     """Simple launcher with clear options."""
@@ -34,9 +43,10 @@ def main():
     print("9. 🔬 Analyze Environment Difficulty")
     print("10. 🏆 Compare Top Performing Models")
     print("11. 🔍 Check Model Compatibility")
+    print("12. 🔬 Detailed Model Evaluation")
     print("0. ❌ Exit")
     
-    choice = input("\nEnter your choice (0-11): ").strip()
+    choice = input("\nEnter your choice (0-12): ").strip()
     
     if choice == "1":
         print("\n🎮 Testing 3D Environment...")
@@ -131,7 +141,8 @@ def main():
                 try:
                     choice_num = int(model_choice)
                     if 1 <= choice_num <= len(model_files):
-                        selected_model = f"./models/{model_files[choice_num - 1]}"
+                        selected_model_filename = model_files[choice_num - 1]
+                        selected_model = f"./models/{selected_model_filename}"
                         
                         # Get additional timesteps
                         while True:
@@ -145,13 +156,22 @@ def main():
                                     if confirm != 'y':
                                         continue
                                 
+                                # --- NEW: Calculate and display total timesteps ---
+                                base_timesteps = get_timesteps_from_filename(selected_model_filename)
+                                total_timesteps = base_timesteps + additional_timesteps
+                                
                                 # Convert to human-readable format
                                 if additional_timesteps >= 1000000:
-                                    readable = f"{additional_timesteps/1000000:.1f}M"
+                                    readable_add = f"{additional_timesteps/1000000:.1f}M"
                                 elif additional_timesteps >= 1000:
-                                    readable = f"{additional_timesteps/1000:.0f}K"
+                                    readable_add = f"{additional_timesteps/1000:.0f}K"
                                 else:
-                                    readable = str(additional_timesteps)
+                                    readable_add = str(additional_timesteps)
+
+                                if total_timesteps >= 1000000:
+                                    readable_total = f"{total_timesteps/1000000:.1f}M"
+                                else:
+                                    readable_total = f"{total_timesteps/1000:.0f}K"
                                 
                                 # Estimate training time
                                 estimated_minutes = additional_timesteps / 10000
@@ -161,11 +181,12 @@ def main():
                                     time_estimate = f"~{estimated_minutes/60:.1f} hours"
                                 
                                 print(f"\n📊 Continue Training Configuration:")
-                                print(f"   Base model: {model_files[choice_num - 1]}")
-                                print(f"   Additional timesteps: {additional_timesteps:,} ({readable})")
+                                print(f"   Base model: {selected_model_filename}")
+                                print(f"   Existing timesteps: {base_timesteps:,}")
+                                print(f"   Additional timesteps: {additional_timesteps:,} ({readable_add})")
+                                print(f"   New total timesteps:  {total_timesteps:,} ({readable_total})")
                                 print(f"   Estimated time: {time_estimate}")
                                 print(f"   Training mode: CONTINUE EXISTING")
-                                print(f"   Reward engineering: MINIMAL (preserves learned strategies)")
                                 
                                 confirm = input("\nContinue training? (y/n): ").strip().lower()
                                 if confirm == 'y':
@@ -304,12 +325,42 @@ def main():
         else:
             print("Compatibility check cancelled.")
             
+    elif choice == "12":
+        print("\n🔬 Detailed Model Evaluation...")
+        print("Run a rigorous statistical analysis on a single model.")
+        
+        models_dir = "models"
+        if os.path.exists(models_dir):
+            model_files = [f for f in os.listdir(models_dir) if f.endswith('.zip')]
+            model_files.sort(reverse=True)
+            
+            if model_files:
+                print(f"\nAvailable models ({len(model_files)} found):")
+                for i, model in enumerate(model_files, 1):
+                    print(f"  {i}. {model}")
+                
+                model_choice = input(f"\nChoose model for detailed evaluation (1-{len(model_files)}): ").strip()
+                try:
+                    choice_num = int(model_choice)
+                    if 1 <= choice_num <= len(model_files):
+                        selected_model = f"./models/{model_files[choice_num - 1]}"
+                        print(f"\nStarting detailed evaluation for: {model_files[choice_num - 1]}")
+                        subprocess.run([PYTHON_PATH, "detailed_evaluation.py", selected_model])
+                    else:
+                        print("Invalid selection.")
+                except ValueError:
+                    print("Invalid input.")
+            else:
+                print("No trained models found in models/ directory.")
+        else:
+            print("Models directory not found.")
+            
     elif choice == "0":
         print("\n👋 Goodbye!")
         sys.exit(0)
         
     else:
-        print("\n❌ Invalid choice. Please enter 0-11.")
+        print("\n❌ Invalid choice. Please enter 0-12.")
     
     # Ask if user wants to continue
     print("\n" + "=" * 45)

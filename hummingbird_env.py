@@ -476,10 +476,10 @@ class ComplexHummingbird3DMatplotlibEnv(gym.Env):
             terminated = True
             reward -= 50  # Big penalty for dying
         
-        # Success condition: survive for 300 steps
-        if self.steps_taken >= 300:
+        # Success condition: survive for 200 steps
+        if self.steps_taken >= 200:
             truncated = True
-            reward += 300  # Bonus for surviving the challenge!
+            reward += 200  # Bonus for surviving the challenge!
         
         # Additional efficiency bonus for high collection rates
         # if self.steps_taken > 0:
