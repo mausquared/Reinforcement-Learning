@@ -12,6 +12,8 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 import torch.nn as nn
 
+from stable_baselines3.common.utils import get_linear_fn
+
 from stable_baselines3 import PPO
 from stable_baselines3.common.env_util import make_vec_env
 from stable_baselines3.common.callbacks import BaseCallback, EvalCallback
@@ -112,6 +114,56 @@ class Complex3DMatplotlibTrainingCallback(BaseCallback):
         return True
 
 
+class SurvivalModelSaver(BaseCallback):
+    """
+    A callback to save the model when a new best survival rate is achieved.
+    It also cleans up the previously saved lower-performing survival model.
+    """
+    def __init__(self, check_freq: int, save_path: str, verbose=1):
+        super().__init__(verbose)
+        self.check_freq = check_freq
+        self.save_path = save_path
+        self.best_survival_rate = -1.0
+        self.last_saved_model_path = None
+        self.episode_lengths = []
+
+    def _on_step(self) -> bool:
+        # Check if an episode has ended
+        if self.locals.get('dones', [False])[0]:
+            # This info is from the Monitor wrapper
+            episode_length = self.locals['infos'][0]['episode']['l']
+            self.episode_lengths.append(episode_length)
+
+        # Check at the specified frequency
+        if self.n_calls % self.check_freq == 0:
+            # Calculate survival rate over the last 100 episodes
+            if len(self.episode_lengths) >= 20: # Only start after 20 episodes
+                recent_episodes = self.episode_lengths[-100:]
+                survival_rate = np.mean([1 if length >= 300 else 0 for length in recent_episodes]) * 100
+                
+                if survival_rate > self.best_survival_rate:
+                    old_best = self.best_survival_rate
+                    self.best_survival_rate = survival_rate
+                    
+                    # Delete the old model if it exists
+                    if self.last_saved_model_path and os.path.exists(self.last_saved_model_path):
+                        if self.verbose > 0:
+                            print(f"Removing old survival model: {self.last_saved_model_path}")
+                        os.remove(self.last_saved_model_path)
+
+                    # Save the new best model
+                    save_name = f"survival_milestone_{int(round(self.best_survival_rate))}%.zip"
+                    new_save_path = os.path.join(self.save_path, save_name)
+                    self.model.save(new_save_path)
+                    self.last_saved_model_path = new_save_path
+                    
+                    if self.verbose > 0:
+                        print(f"\n🎉 New best survival rate! From {old_best:.1f}% to {self.best_survival_rate:.1f}%.")
+                        print(f"   Model saved as: {save_name}")
+
+        return True
+
+
 def create_3d_matplotlib_env():
     """Create a 3D matplotlib hummingbird environment for training."""
     return ComplexHummingbird3DMatplotlibEnv(
@@ -174,17 +226,23 @@ def train_complex_3d_matplotlib_ppo(timesteps=500000, model_name=None):
     # Create evaluation environment (single env for consistent evaluation)
     eval_env = Monitor(create_3d_matplotlib_env())
     
+    # Learning rate and clip range annealing for stability over long training
+    # lr starts at 5e-4 and linearly decays to 1e-5 over the entire training
+    lr_schedule = get_linear_fn(5e-4, 1e-5, 1.0)
+    # clip range starts at 0.2 and linearly decays to 0.1 over the entire training
+    clip_schedule = get_linear_fn(0.2, 0.1, 1.0)
+    
     # PPO hyperparameters optimized for 3D complex environment with memory learning
     model = PPO(
         "MultiInputPolicy",  # Required for Dict observation spaces
         env,
-        learning_rate=5e-4,  # Increased from 3e-4 for faster memory learning
+        learning_rate=lr_schedule,  # Use the learning rate schedule
         n_steps=2048 // n_envs,  # Adjust for multiple environments
-        batch_size=256,  # Increased from 128 for better gradient estimates
-        n_epochs=15,  # Increased from 10 for more thorough learning
-        gamma=0.99,
+        batch_size=225,  # Increased from 128 for better gradient estimates
+        n_epochs=10,  # Increased from 10 for more thorough learning
+        gamma=0.999,
         gae_lambda=0.95,
-        clip_range=0.2,
+        clip_range=clip_schedule, # Use the clip range schedule
         clip_range_vf=None,
         normalize_advantage=True,
         ent_coef=0.02,  # Increased exploration in 3D space with memory
@@ -221,7 +279,14 @@ def train_complex_3d_matplotlib_ppo(timesteps=500000, model_name=None):
         n_eval_episodes=10
     )
     
-    callbacks = [training_callback, eval_callback]
+    # Survival model saver callback
+    survival_callback = SurvivalModelSaver(
+        check_freq=5000,  # Check every 5000 steps
+        save_path="./models/",
+        verbose=1
+    )
+    
+    callbacks = [training_callback, eval_callback, survival_callback]
     
     # Train the model
     print("\n🚀 Starting training...")
@@ -919,6 +984,8 @@ def continue_training_model(model_path, additional_timesteps):
     print(f"📊 Reward Engineering: PRESERVED (maintains learned strategies)")
     print("=" * 45)
     
+    env = None
+    eval_env = None
     try:
         # Load existing model
         print("🔄 Loading existing model...")
@@ -972,8 +1039,14 @@ def continue_training_model(model_path, additional_timesteps):
             render=False,
             n_eval_episodes=10
         )
-        
-        callbacks = [training_callback, eval_callback]
+
+        # New callback for saving based on survival rate
+        survival_saver_callback = SurvivalModelSaver(
+            check_freq=5000,  # Check every 5000 steps
+            save_path="./models/"
+        )
+    
+        callbacks = [training_callback, eval_callback, survival_saver_callback]
         
         # Continue training
         print("\n🚀 Continuing training...")
@@ -1024,13 +1097,14 @@ def continue_training_model(model_path, additional_timesteps):
         print(f"🎯 Ready for evaluation!")
         print("=" * 45)
         
-        # Clean up
-        env.close()
-        eval_env.close()
-        
     except Exception as e:
         print(f"❌ Error during continued training: {e}")
-        return
+    finally:
+        # Clean up environment even on error
+        if env is not None:
+            env.close()
+        if eval_env is not None:
+            eval_env.close()
 
 
 def view_training_progress():

@@ -32,9 +32,11 @@ def main():
     print("7. 📊 Evaluate Model Performance")
     print("8. 📈 View Training Progress")
     print("9. 🔬 Analyze Environment Difficulty")
+    print("10. 🏆 Compare Top Performing Models")
+    print("11. 🔍 Check Model Compatibility")
     print("0. ❌ Exit")
     
-    choice = input("\nEnter your choice (0-9): ").strip()
+    choice = input("\nEnter your choice (0-11): ").strip()
     
     if choice == "1":
         print("\n🎮 Testing 3D Environment...")
@@ -277,13 +279,37 @@ def main():
         print("\n🔬 Analyzing Environment Difficulty...")
         print("Comprehensive analysis of environment parameters and difficulty")
         subprocess.run([PYTHON_PATH, "environment_analysis.py"])
+        
+    elif choice == "10":
+        print("\n🏆 Compare Top Performing Models...")
+        print("Statistical comparison of best models with 10 runs × 100 episodes each")
+        print("This will evaluate models with 1000 episodes total per model")
+        print("⏱️  This may take 30-60 minutes depending on number of models")
+        
+        confirm = input("\nProceed with comprehensive model comparison? (y/n): ").strip().lower()
+        if confirm == 'y':
+            subprocess.run([PYTHON_PATH, "model_comparison.py"])
+        else:
+            print("Model comparison cancelled.")
+            
+    elif choice == "11":
+        print("\n🔍 Check Model Compatibility...")
+        print("Check all models for environment compatibility")
+        print("Incompatible models will be renamed with LEGACY_ prefix")
+        print("⚠️  This will automatically rename incompatible models")
+        
+        confirm = input("\nProceed with compatibility check and auto-rename? (y/n): ").strip().lower()
+        if confirm == 'y':
+            subprocess.run([PYTHON_PATH, "model_compatibility_checker.py"])
+        else:
+            print("Compatibility check cancelled.")
             
     elif choice == "0":
         print("\n👋 Goodbye!")
         sys.exit(0)
         
     else:
-        print("\n❌ Invalid choice. Please enter 0-9.")
+        print("\n❌ Invalid choice. Please enter 0-11.")
     
     # Ask if user wants to continue
     print("\n" + "=" * 45)

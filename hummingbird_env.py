@@ -36,17 +36,17 @@ class ComplexHummingbird3DMatplotlibEnv(gym.Env):
         self.MOVE_HORIZONTAL_COST = 0.8     # Reduced from 1.2  
         self.MOVE_UP_ENERGY_COST = 1.2      # Further reduced from 1.8 to 1.2 for better upper region access
         self.MOVE_DOWN_ENERGY_COST = 0.5    # Reduced from 0.8
-        self.HOVER_ENERGY_COST = 2.2        # Reduced from 3.0
-                
-        self.NECTAR_GAIN = 35               # Energy gained from nectar
-        
+        self.HOVER_ENERGY_COST = 2.0        # Reduced from 3.0
+
+        self.NECTAR_GAIN = 40               # Energy gained from nectar
+
         # Flower mechanics
-        self.MAX_NECTAR = 35               
+        self.MAX_NECTAR = 40               
         self.NECTAR_REGEN_RATE = 0.3       
         self.FLOWER_COOLDOWN_TIME = 15     
         
         # Memory and learning bonuses
-        self.FLOWER_VISIT_BONUS = 15       
+        self.FLOWER_VISIT_BONUS = 20       
         # Removed engineered reward constants for autonomous learning  
         
         # Observation space
@@ -100,6 +100,11 @@ class ComplexHummingbird3DMatplotlibEnv(gym.Env):
         self.ax = None
         self.agent_trail = []  # Track agent's path
         self.max_trail_length = 50
+
+        # Milestone tracking for reward curriculum
+        self.milestone_150_reached = False
+        self.milestone_200_reached = False
+        self.milestone_250_reached = False
         
     def reset(self, seed=None, options=None):
         """Reset the environment."""
@@ -133,6 +138,11 @@ class ComplexHummingbird3DMatplotlibEnv(gym.Env):
         self.last_step_reward = 0.0
         self.reward_history = []
         self.current_action = 6  # Start with hover
+
+        # Reset milestone flags for the new episode
+        self.milestone_150_reached = False
+        self.milestone_200_reached = False
+        self.milestone_250_reached = False
         
         return self._get_observation(), {}
     
@@ -415,6 +425,10 @@ class ComplexHummingbird3DMatplotlibEnv(gym.Env):
                         if hasattr(self, '_debug_mode') and self._debug_mode:
                             print(f"❌ Visited empty flower! Agent must learn from experience.")
             else:
+                # NEW: Add a penalty for visiting a flower that is on cooldown.
+                # This teaches the agent to not loiter at depleted flowers.
+                reward -= 5.0
+                
                 # Agent must learn from consequences - no explicit penalty teaching
                 if hasattr(self, '_debug_mode') and self._debug_mode:
                     cooldown_remaining = self.flower_cooldowns[on_flower_idx]
@@ -432,9 +446,26 @@ class ComplexHummingbird3DMatplotlibEnv(gym.Env):
         # Removed exploration bonus - agent must develop own exploration strategy
         
         # Only keep core penalty
-        reward -= 0.05  # Basic step penalty to encourage efficiency
+        reward -= 0.1  # Basic step penalty to encourage efficiency, increased from 0.05
         
+        # NEW: Add a continuous reward for maintaining high energy to encourage survival
+        # This reward is proportional to the current energy level.
+        energy_ratio = self.agent_energy / self.max_energy
+        reward += energy_ratio * 0.05  # Small bonus for high energy
+
         # Removed all remaining engineered rewards for autonomous learning
+
+        # --- Survival Milestone Rewards ---
+        # Check if the agent has crossed a new milestone
+        if self.steps_taken >= 150 and not self.milestone_150_reached:
+            reward += 25.0
+            self.milestone_150_reached = True
+        if self.steps_taken >= 200 and not self.milestone_200_reached:
+            reward += 50.0
+            self.milestone_200_reached = True
+        if self.steps_taken >= 250 and not self.milestone_250_reached:
+            reward += 75.0
+            self.milestone_250_reached = True
         
         # Termination conditions
         terminated = False
@@ -448,15 +479,15 @@ class ComplexHummingbird3DMatplotlibEnv(gym.Env):
         # Success condition: survive for 300 steps
         if self.steps_taken >= 300:
             truncated = True
-            reward += 100  # Bonus for surviving the challenge!
+            reward += 300  # Bonus for surviving the challenge!
         
         # Additional efficiency bonus for high collection rates
-        if self.steps_taken > 0:
-            collection_rate = self.total_nectar_collected / self.steps_taken
-            if collection_rate > 0.5:  # Very efficient collection
-                reward += 3.0
-            elif collection_rate > 0.3:  # Good collection rate
-                reward += 1.0
+        # if self.steps_taken > 0:
+        #     collection_rate = self.total_nectar_collected / self.steps_taken
+        #     if collection_rate > 0.5:  # Very efficient collection
+        #         reward += 3.0
+        #     elif collection_rate > 0.3:  # Good collection rate
+        #         reward += 1.0
         
         info = {
             'total_nectar_collected': self.total_nectar_collected,
@@ -746,7 +777,7 @@ def test_complex_3d_matplotlib_environment():
     """Test the 3D matplotlib hummingbird environment."""
     print("Testing 3D Complex Hummingbird Environment with Matplotlib...")
     
-    env = ComplexHummingbird3DMatplotlibEnv(grid_size=8, num_flowers=4, max_height=6, 
+    env = ComplexHummingbird3DMatplotlibEnv(grid_size=8, num_flowers=8, max_height=6, 
                                           render_mode="matplotlib")
     
     for episode in range(1):
