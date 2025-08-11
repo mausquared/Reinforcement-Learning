@@ -168,7 +168,7 @@ def create_3d_matplotlib_env():
     """Create a 3D matplotlib hummingbird environment for training."""
     return ComplexHummingbird3DMatplotlibEnv(
         grid_size=10,
-        num_flowers=8,
+        num_flowers=5,
         max_energy=100,
         max_height=8,
         render_mode=None  # No rendering during training for speed
@@ -323,46 +323,50 @@ def train_complex_3d_matplotlib_ppo(timesteps=500000, model_name=None):
 
 
 def create_training_analysis_plots(stats, model_name):
-    """Create comprehensive training analysis plots for 3D environment."""
+    """Create comprehensive training analysis plots for 3D environment and save them individually."""
     
     if not stats['episodes'] or len(stats['total_rewards']) == 0:
         print("No training data available for plotting")
         return
-    
-    # Create figure with subplots
-    fig, axes = plt.subplots(2, 3, figsize=(18, 12))
-    fig.suptitle(f'3D Matplotlib Complex Hummingbird Training Analysis - {model_name}', fontsize=16)
-    
+
     episodes = range(1, len(stats['total_rewards']) + 1)
-    
-    # 1. Rewards over time
-    axes[0, 0].plot(episodes, stats['total_rewards'], alpha=0.6, color='blue')
+    base_save_path = f'./models/{model_name}'
+
+    # --- 1. Rewards over time ---
+    plt.figure(figsize=(10, 6))
+    plt.plot(episodes, stats['total_rewards'], alpha=0.6, color='blue')
     if len(stats['total_rewards']) > 50:
-        # Add moving average
         window = min(50, len(stats['total_rewards']) // 10)
         moving_avg = np.convolve(stats['total_rewards'], np.ones(window)/window, mode='valid')
-        axes[0, 0].plot(episodes[window-1:], moving_avg, color='red', linewidth=2, label=f'MA({window})')
-        axes[0, 0].legend()
-    
-    axes[0, 0].set_title('Episode Rewards')
-    axes[0, 0].set_xlabel('Episode')
-    axes[0, 0].set_ylabel('Total Reward')
-    axes[0, 0].grid(True, alpha=0.3)
-    
-    # 2. Episode lengths (survival time)
-    axes[0, 1].plot(episodes, stats['episode_lengths'], alpha=0.6, color='green')
+        plt.plot(episodes[window-1:], moving_avg, color='red', linewidth=2, label=f'MA({window})')
+        plt.legend()
+    plt.title('Episode Rewards')
+    plt.xlabel('Episode')
+    plt.ylabel('Total Reward')
+    plt.grid(True, alpha=0.3)
+    plt.tight_layout()
+    plt.savefig(f'{base_save_path}_plot_1_rewards.png', dpi=300)
+    plt.close()
+    print(f"Saved plot: {model_name}_plot_1_rewards.png")
+
+    # --- 2. Episode lengths (survival time) ---
+    plt.figure(figsize=(10, 6))
+    plt.plot(episodes, stats['episode_lengths'], alpha=0.6, color='green')
     if len(stats['episode_lengths']) > 50:
         window = min(50, len(stats['episode_lengths']) // 10)
         moving_avg = np.convolve(stats['episode_lengths'], np.ones(window)/window, mode='valid')
-        axes[0, 1].plot(episodes[window-1:], moving_avg, color='darkgreen', linewidth=2, label=f'MA({window})')
-        axes[0, 1].legend()
-    
-    axes[0, 1].set_title('Episode Lengths (Survival Time)')
-    axes[0, 1].set_xlabel('Episode')
-    axes[0, 1].set_ylabel('Steps Survived')
-    axes[0, 1].grid(True, alpha=0.3)
-    
-    # 3. Survival rate over time
+        plt.plot(episodes[window-1:], moving_avg, color='darkgreen', linewidth=2, label=f'MA({window})')
+        plt.legend()
+    plt.title('Episode Lengths (Survival Time)')
+    plt.xlabel('Episode')
+    plt.ylabel('Steps Survived')
+    plt.grid(True, alpha=0.3)
+    plt.tight_layout()
+    plt.savefig(f'{base_save_path}_plot_2_episode_lengths.png', dpi=300)
+    plt.close()
+    print(f"Saved plot: {model_name}_plot_2_episode_lengths.png")
+
+    # --- 3. Survival rate over time ---
     if stats['survival_rates']:
         window_size = min(100, len(stats['survival_rates']) // 5)
         if window_size > 0:
@@ -371,60 +375,75 @@ def create_training_analysis_plots(stats, model_name):
                 window_survival = np.mean(stats['survival_rates'][i-window_size:i]) * 100
                 survival_windows.append(window_survival)
             
-            axes[0, 2].plot(range(window_size, len(stats['survival_rates']) + 1), 
-                          survival_windows, color='purple', linewidth=2)
-    
-    axes[0, 2].set_title(f'Survival Rate (Moving Average, Window={window_size})')
-    axes[0, 2].set_xlabel('Episode')
-    axes[0, 2].set_ylabel('Survival Rate (%)')
-    axes[0, 2].set_ylim(0, 100)
-    axes[0, 2].grid(True, alpha=0.3)
-    
-    # 4. Nectar collection over time
-    axes[1, 0].plot(episodes, stats['nectar_collected'], alpha=0.6, color='orange')
+            plt.figure(figsize=(10, 6))
+            plt.plot(range(window_size, len(stats['survival_rates']) + 1), 
+                     survival_windows, color='purple', linewidth=2)
+            plt.title(f'Survival Rate (Moving Average, Window={window_size})')
+            plt.xlabel('Episode')
+            plt.ylabel('Survival Rate (%)')
+            plt.ylim(0, 100)
+            plt.grid(True, alpha=0.3)
+            plt.tight_layout()
+            plt.savefig(f'{base_save_path}_plot_3_survival_rate.png', dpi=300)
+            plt.close()
+            print(f"Saved plot: {model_name}_plot_3_survival_rate.png")
+
+    # --- 4. Nectar collection over time ---
+    plt.figure(figsize=(10, 6))
+    plt.plot(episodes, stats['nectar_collected'], alpha=0.6, color='orange')
     if len(stats['nectar_collected']) > 50:
         window = min(50, len(stats['nectar_collected']) // 10)
         moving_avg = np.convolve(stats['nectar_collected'], np.ones(window)/window, mode='valid')
-        axes[1, 0].plot(episodes[window-1:], moving_avg, color='darkorange', linewidth=2, label=f'MA({window})')
-        axes[1, 0].legend()
-    
-    axes[1, 0].set_title('Nectar Collection Progress')
-    axes[1, 0].set_xlabel('Episode')
-    axes[1, 0].set_ylabel('Total Nectar Collected')
-    axes[1, 0].grid(True, alpha=0.3)
-    
-    # 5. Altitude statistics (3D specific)
+        plt.plot(episodes[window-1:], moving_avg, color='darkorange', linewidth=2, label=f'MA({window})')
+        plt.legend()
+    plt.title('Nectar Collection Progress')
+    plt.xlabel('Episode')
+    plt.ylabel('Total Nectar Collected')
+    plt.grid(True, alpha=0.3)
+    plt.tight_layout()
+    plt.savefig(f'{base_save_path}_plot_4_nectar_collection.png', dpi=300)
+    plt.close()
+    print(f"Saved plot: {model_name}_plot_4_nectar_collection.png")
+
+    # --- 5. Altitude statistics (3D specific) ---
     if stats['altitude_stats']:
-        axes[1, 1].plot(range(len(stats['altitude_stats'])), stats['altitude_stats'], 
-                       alpha=0.6, color='skyblue')
+        plt.figure(figsize=(10, 6))
+        plt.plot(range(len(stats['altitude_stats'])), stats['altitude_stats'], 
+                 alpha=0.6, color='skyblue')
         if len(stats['altitude_stats']) > 50:
             window = min(50, len(stats['altitude_stats']) // 10)
             moving_avg = np.convolve(stats['altitude_stats'], np.ones(window)/window, mode='valid')
-            axes[1, 1].plot(range(window-1, len(stats['altitude_stats'])), moving_avg, 
-                           color='navy', linewidth=2, label=f'MA({window})')
-            axes[1, 1].legend()
-    
-    axes[1, 1].set_title('Average Flight Altitude')
-    axes[1, 1].set_xlabel('Episode')
-    axes[1, 1].set_ylabel('Average Altitude')
-    axes[1, 1].grid(True, alpha=0.3)
-    
-    # 6. Episode end reasons analysis
+            plt.plot(range(window-1, len(stats['altitude_stats'])), moving_avg, 
+                     color='navy', linewidth=2, label=f'MA({window})')
+            plt.legend()
+        plt.title('Average Flight Altitude')
+        plt.xlabel('Episode')
+        plt.ylabel('Average Altitude')
+        plt.grid(True, alpha=0.3)
+        plt.tight_layout()
+        plt.savefig(f'{base_save_path}_plot_5_altitude.png', dpi=300)
+        plt.close()
+        print(f"Saved plot: {model_name}_plot_5_altitude.png")
+
+    # --- 6. Episode end reasons analysis ---
     if stats['episode_end_reasons']:
         crash_types = ['energy_depletion', 'time_limit']
         crash_counts = [stats['episode_end_reasons'].count(crash_type) for crash_type in crash_types]
-        colors = ['red', 'gray']
         
-        axes[1, 2].pie(crash_counts, labels=crash_types, colors=colors, autopct='%1.1f%%')
-        axes[1, 2].set_title('Episode End Reasons')
-    
-    plt.tight_layout()
-    
-    # Save the plot
-    plt.savefig(f'./models/{model_name}_3d_matplotlib_training_analysis.png', dpi=300, bbox_inches='tight')
-    print(f"Training analysis plot saved as {model_name}_3d_matplotlib_training_analysis.png")
-    
-    plt.show()
+        # Ensure there's something to plot
+        if sum(crash_counts) > 0:
+            colors = ['red', 'gray']
+            plt.figure(figsize=(8, 8))
+            plt.pie(crash_counts, labels=crash_types, colors=colors, autopct='%1.1f%%', startangle=90)
+            plt.title('Episode End Reasons')
+            plt.tight_layout()
+            plt.savefig(f'{base_save_path}_plot_6_end_reasons.png', dpi=300)
+            plt.close()
+            print(f"Saved plot: {model_name}_plot_6_end_reasons.png")
+
+    print("\nAll individual training analysis plots have been saved.")
+    # The original combined plot is no longer shown or saved.
+    # plt.show() can be re-enabled if you want to see plots interactively.
 
 
 def test_trained_model_3d_matplotlib(model_path, num_episodes=10, render=True):
@@ -438,7 +457,7 @@ def test_trained_model_3d_matplotlib(model_path, num_episodes=10, render=True):
     # Create test environment with rendering
     env = ComplexHummingbird3DMatplotlibEnv(
         grid_size=10,
-        num_flowers=8,
+        num_flowers=5,
         max_energy=100,
         max_height=8,
         render_mode="matplotlib" if render else None

@@ -38,10 +38,10 @@ class ComplexHummingbird3DMatplotlibEnv(gym.Env):
         self.MOVE_DOWN_ENERGY_COST = 0.5    # Reduced from 0.8
         self.HOVER_ENERGY_COST = 2.0        # Reduced from 3.0
 
-        self.NECTAR_GAIN = 40               # Energy gained from nectar
+        self.NECTAR_GAIN = 30               # Energy gained from nectar
 
         # Flower mechanics
-        self.MAX_NECTAR = 40               
+        self.MAX_NECTAR = 30               
         self.NECTAR_REGEN_RATE = 0.3       
         self.FLOWER_COOLDOWN_TIME = 15     
         
@@ -414,10 +414,14 @@ class ComplexHummingbird3DMatplotlibEnv(gym.Env):
                         self.flower_cooldowns[on_flower_idx] = self.FLOWER_COOLDOWN_TIME
                     
                     # Gain energy and reward
-                    self.agent_energy = min(self.max_energy, self.agent_energy + nectar_collected)
+                    self.agent_energy = min(self.max_energy, self.agent_energy + self.NECTAR_GAIN)
+
+                    # NEW: Enforce a hover cost for collecting nectar
+                    self.agent_energy -= self.HOVER_ENERGY_COST
+                    
                     # CORE OBJECTIVE: Nectar collection (the only guidance allowed)
                     self.total_nectar_collected += nectar_collected
-                    reward += nectar_collected  # Direct reward for nectar collection
+                    reward += 30  # Direct reward for nectar collection
                 else:
                     # Removed penalties for empty flowers - agent must learn this autonomously
                     if hasattr(self, '_debug_mode') and self._debug_mode:
@@ -476,8 +480,8 @@ class ComplexHummingbird3DMatplotlibEnv(gym.Env):
             terminated = True
             reward -= 50  # Big penalty for dying
         
-        # Success condition: survive for 200 steps
-        if self.steps_taken >= 200:
+        # Success condition: survive for 300 steps
+        if self.steps_taken >= 300:
             truncated = True
             reward += 200  # Bonus for surviving the challenge!
         
@@ -777,7 +781,7 @@ def test_complex_3d_matplotlib_environment():
     """Test the 3D matplotlib hummingbird environment."""
     print("Testing 3D Complex Hummingbird Environment with Matplotlib...")
     
-    env = ComplexHummingbird3DMatplotlibEnv(grid_size=8, num_flowers=8, max_height=6, 
+    env = ComplexHummingbird3DMatplotlibEnv(grid_size=8, num_flowers=5, max_height=6, 
                                           render_mode="matplotlib")
     
     for episode in range(1):
@@ -790,7 +794,7 @@ def test_complex_3d_matplotlib_environment():
         truncated = False
         step_count = 0
         
-        while not (terminated or truncated) and step_count < 200:
+        while not (terminated or truncated) and step_count < 300:
             # More strategic action selection for better visualization
             if step_count < 50:
                 # Explore different heights initially
