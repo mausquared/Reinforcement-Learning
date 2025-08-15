@@ -10,7 +10,11 @@ import subprocess
 import re  # Import the regular expressions module
 
 # Python executable path for this virtual environment
-PYTHON_PATH = "C:/Users/mdnva/OneDrive/Desktop/Projects/Reinforcement-Learning/.venv/Scripts/python.exe"
+# Ensure this path is correct for your system
+PYTHON_PATH = "C:/Users/Mauritius/Desktop/Projects/Reinforcement-Learning/.venv/Scripts/python.exe"
+
+# Get the directory where launcher.py is located
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 def get_timesteps_from_filename(filename):
     """Extracts the number of thousands of timesteps from a model filename."""
@@ -52,14 +56,16 @@ def main():
         print("\n🎮 Testing 3D Environment...")
         print("Watch the hummingbird navigate 3D space!")
         print("Close the matplotlib window when done.")
-        subprocess.run([PYTHON_PATH, "hummingbird_env.py"])
+        hummingbird_env_path = os.path.join(SCRIPT_DIR, "hummingbird_env.py")
+        subprocess.run([PYTHON_PATH, hummingbird_env_path])
         
     elif choice == "2":
         print("\n🎯 Training New Model...")
         print("This will train for 500,000 timesteps (~30-60 minutes)")
         confirm = input("Continue? (y/n): ").strip().lower()
         if confirm == 'y':
-            subprocess.run([PYTHON_PATH, "train.py", "1"])  # Pass argument "1" for 500K timesteps
+            train_script_path = os.path.join(SCRIPT_DIR, "train.py")
+            subprocess.run([PYTHON_PATH, train_script_path, "1"])
         else:
             print("Training cancelled.")
             
@@ -68,7 +74,8 @@ def main():
         print("This will train for 1,000,000 timesteps (~60-120 minutes)")
         confirm = input("Continue? (y/n): ").strip().lower()
         if confirm == 'y':
-            subprocess.run([PYTHON_PATH, "train.py", "2"])  # Pass argument "2" for 1M timesteps
+            train_script_path = os.path.join(SCRIPT_DIR, "train.py")
+            subprocess.run([PYTHON_PATH, train_script_path, "2"])
         else:
             print("Training cancelled.")
             
@@ -112,7 +119,8 @@ def main():
                 
                 confirm = input("\nStart custom training? (y/n): ").strip().lower()
                 if confirm == 'y':
-                    subprocess.run([PYTHON_PATH, "train.py", "custom", str(custom_timesteps)])
+                    train_script_path = os.path.join(SCRIPT_DIR, "train.py")
+                    subprocess.run([PYTHON_PATH, train_script_path, "custom", str(custom_timesteps)])
                     break
                 else:
                     print("Training cancelled.")
@@ -127,7 +135,7 @@ def main():
         print("Extend training on a previously trained model")
         
         # List available models
-        models_dir = "models"
+        models_dir = os.path.join(SCRIPT_DIR, "models") # Ensure models_dir is also an absolute path
         if os.path.exists(models_dir):
             model_files = [f for f in os.listdir(models_dir) if f.endswith('.zip')]
             model_files.sort(reverse=True)  # Most recent first
@@ -142,7 +150,7 @@ def main():
                     choice_num = int(model_choice)
                     if 1 <= choice_num <= len(model_files):
                         selected_model_filename = model_files[choice_num - 1]
-                        selected_model = f"./models/{selected_model_filename}"
+                        selected_model = os.path.join(models_dir, selected_model_filename) # Full path to selected model
                         
                         # Get additional timesteps
                         while True:
@@ -190,7 +198,8 @@ def main():
                                 
                                 confirm = input("\nContinue training? (y/n): ").strip().lower()
                                 if confirm == 'y':
-                                    subprocess.run([PYTHON_PATH, "train.py", "continue", selected_model, str(additional_timesteps)])
+                                    train_script_path = os.path.join(SCRIPT_DIR, "train.py")
+                                    subprocess.run([PYTHON_PATH, train_script_path, "continue", selected_model, str(additional_timesteps)])
                                 break
                                 
                             except ValueError:
@@ -212,7 +221,7 @@ def main():
         print("Looking for available models...")
         
         # List available models
-        models_dir = "models"
+        models_dir = os.path.join(SCRIPT_DIR, "models")
         if os.path.exists(models_dir):
             model_files = [f for f in os.listdir(models_dir) if f.endswith('.zip')]
             model_files.sort()  # Sort files alphabetically
@@ -225,18 +234,20 @@ def main():
                 model_choice = input(f"\nChoose model (1-{len(model_files) + 1}): ").strip()
                 try:
                     choice_num = int(model_choice)
+                    train_script_path = os.path.join(SCRIPT_DIR, "train.py")
                     if 1 <= choice_num <= len(model_files):
-                        selected_model = f"./models/{model_files[choice_num - 1]}"
+                        selected_model = os.path.join(models_dir, model_files[choice_num - 1])
                         print(f"Testing model: {model_files[choice_num - 1]} (with 3D visualization)")
-                        subprocess.run([PYTHON_PATH, "train.py", "4", selected_model])
+                        subprocess.run([PYTHON_PATH, train_script_path, "4", selected_model])
                     elif choice_num == len(model_files) + 1:
                         print("Testing default model: best_model (with 3D visualization)")
-                        subprocess.run([PYTHON_PATH, "train.py", "3"])
+                        subprocess.run([PYTHON_PATH, train_script_path, "3"])
                     else:
                         print("Invalid selection.")
                 except ValueError:
                     print("Invalid input. Using default model (with 3D visualization).")
-                    subprocess.run([PYTHON_PATH, "train.py", "3"])
+                    train_script_path = os.path.join(SCRIPT_DIR, "train.py")
+                    subprocess.run([PYTHON_PATH, train_script_path, "3"])
             else:
                 print("No trained models found in models/ directory.")
                 print("Please train a model first (options 2 or 3).")
@@ -253,7 +264,7 @@ def main():
         print("   ⚠️  Reward scores between different environment versions are NOT comparable!")
         
         # List available models (same as option 4)
-        models_dir = "models"
+        models_dir = os.path.join(SCRIPT_DIR, "models")
         if os.path.exists(models_dir):
             model_files = [f for f in os.listdir(models_dir) if f.endswith('.zip')]
             model_files.sort()  # Sort files alphabetically
@@ -267,25 +278,27 @@ def main():
                 model_choice = input(f"\nChoose model to evaluate (1-{len(model_files) + 2}): ").strip()
                 try:
                     choice_num = int(model_choice)
+                    train_script_path = os.path.join(SCRIPT_DIR, "train.py")
                     if 1 <= choice_num <= len(model_files):
-                        selected_model = f"./models/{model_files[choice_num - 1]}"
+                        selected_model = os.path.join(models_dir, model_files[choice_num - 1])
                         print(f"Evaluating model: {model_files[choice_num - 1]}")
                         print("Running 100 episodes for comprehensive evaluation (no visualization)...")
-                        subprocess.run([PYTHON_PATH, "train.py", "5", selected_model])  # New evaluation mode
+                        subprocess.run([PYTHON_PATH, train_script_path, "5", selected_model])  # New evaluation mode
                     elif choice_num == len(model_files) + 1:
                         print("Evaluating default model: best_model")
                         print("Running 100 episodes for comprehensive evaluation (no visualization)...")
-                        subprocess.run([PYTHON_PATH, "train.py", "5", "./models/best_model"])
+                        subprocess.run([PYTHON_PATH, train_script_path, "5", os.path.join(models_dir, "best_model.zip")]) # Changed to best_model.zip to be explicit
                     elif choice_num == len(model_files) + 2:
                         print("Evaluating ALL models - this may take a while...")
                         print("(50 episodes per model for comprehensive comparison - no visualization)")
-                        subprocess.run([PYTHON_PATH, "train.py", "6"])  # Evaluate all models
+                        subprocess.run([PYTHON_PATH, train_script_path, "6"])  # Evaluate all models
                     else:
                         print("Invalid selection.")
                 except ValueError:
                     print("Invalid input. Using default model.")
                     print("Running 100 episodes for comprehensive evaluation (no visualization)...")
-                    subprocess.run([PYTHON_PATH, "train.py", "5", "./models/best_model"])
+                    train_script_path = os.path.join(SCRIPT_DIR, "train.py")
+                    subprocess.run([PYTHON_PATH, train_script_path, "5", os.path.join(models_dir, "best_model.zip")]) # Changed to best_model.zip to be explicit
             else:
                 print("No trained models found in models/ directory.")
                 print("Please train a model first (options 2 or 3).")
@@ -294,12 +307,14 @@ def main():
             
     elif choice == "8":
         print("\n📈 Viewing Training Progress...")
-        subprocess.run([PYTHON_PATH, "train.py", "progress"])
+        train_script_path = os.path.join(SCRIPT_DIR, "train.py")
+        subprocess.run([PYTHON_PATH, train_script_path, "progress"])
             
     elif choice == "9":
         print("\n🔬 Analyzing Environment Difficulty...")
         print("Comprehensive analysis of environment parameters and difficulty")
-        subprocess.run([PYTHON_PATH, "environment_analysis.py"])
+        environment_analysis_path = os.path.join(SCRIPT_DIR, "environment_analysis.py")
+        subprocess.run([PYTHON_PATH, environment_analysis_path])
         
     elif choice == "10":
         print("\n🏆 Compare Top Performing Models...")
@@ -309,7 +324,8 @@ def main():
         
         confirm = input("\nProceed with comprehensive model comparison? (y/n): ").strip().lower()
         if confirm == 'y':
-            subprocess.run([PYTHON_PATH, "model_comparison.py"])
+            model_comparison_path = os.path.join(SCRIPT_DIR, "model_comparison.py")
+            subprocess.run([PYTHON_PATH, model_comparison_path])
         else:
             print("Model comparison cancelled.")
             
@@ -321,7 +337,8 @@ def main():
         
         confirm = input("\nProceed with compatibility check and auto-rename? (y/n): ").strip().lower()
         if confirm == 'y':
-            subprocess.run([PYTHON_PATH, "model_compatibility_checker.py"])
+            model_compatibility_checker_path = os.path.join(SCRIPT_DIR, "model_compatibility_checker.py")
+            subprocess.run([PYTHON_PATH, model_compatibility_checker_path])
         else:
             print("Compatibility check cancelled.")
             
@@ -329,7 +346,7 @@ def main():
         print("\n🔬 Detailed Model Evaluation...")
         print("Run a rigorous statistical analysis on a single model.")
         
-        models_dir = "models"
+        models_dir = os.path.join(SCRIPT_DIR, "models")
         if os.path.exists(models_dir):
             model_files = [f for f in os.listdir(models_dir) if f.endswith('.zip')]
             model_files.sort(reverse=True)
@@ -343,9 +360,10 @@ def main():
                 try:
                     choice_num = int(model_choice)
                     if 1 <= choice_num <= len(model_files):
-                        selected_model = f"./models/{model_files[choice_num - 1]}"
+                        selected_model = os.path.join(models_dir, model_files[choice_num - 1])
                         print(f"\nStarting detailed evaluation for: {model_files[choice_num - 1]}")
-                        subprocess.run([PYTHON_PATH, "detailed_evaluation.py", selected_model])
+                        detailed_evaluation_path = os.path.join(SCRIPT_DIR, "detailed_evaluation.py")
+                        subprocess.run([PYTHON_PATH, detailed_evaluation_path, selected_model])
                     else:
                         print("Invalid selection.")
                 except ValueError:
