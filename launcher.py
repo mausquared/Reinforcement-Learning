@@ -1,9 +1,3 @@
-#!/usr/bin/env python3
-"""
-🐦 3D Hummingbird Environment - Quick Launcher
-Simple launcher for the 3D matplotlib hummingbird environment
-"""
-
 import os
 import sys
 import subprocess
@@ -211,7 +205,6 @@ def main():
         print("🎮 Interactive test with 3D visualization")
         print("Looking for available models...")
         
-        # List available models
         models_dir = "models"
         if os.path.exists(models_dir):
             model_files = [f for f in os.listdir(models_dir) if f.endswith('.zip')]
@@ -220,23 +213,39 @@ def main():
                 print(f"\nAvailable models ({len(model_files)} found):")
                 for i, model in enumerate(model_files, 1):
                     print(f"  {i}. {model}")
-                print(f"  {len(model_files) + 1}. Use default (best_model)")
+                print(f"  {len(model_files) + 1}. Use default (best_model.zip)") 
                 
-                model_choice = input(f"\nChoose model (1-{len(model_files) + 1}): ").strip()
-                try:
-                    choice_num = int(model_choice)
-                    if 1 <= choice_num <= len(model_files):
-                        selected_model = f"./models/{model_files[choice_num - 1]}"
-                        print(f"Testing model: {model_files[choice_num - 1]} (with 3D visualization)")
-                        subprocess.run([PYTHON_PATH, "train.py", "4", selected_model])
-                    elif choice_num == len(model_files) + 1:
-                        print("Testing default model: best_model (with 3D visualization)")
-                        subprocess.run([PYTHON_PATH, "train.py", "3"])
-                    else:
-                        print("Invalid selection.")
-                except ValueError:
-                    print("Invalid input. Using default model (with 3D visualization).")
-                    subprocess.run([PYTHON_PATH, "train.py", "3"])
+                selected_model_path = None
+                while True: # Loop to ensure valid model choice
+                    model_choice = input(f"\nChoose model (1-{len(model_files) + 1}): ").strip()
+                    try:
+                        choice_num = int(model_choice)
+                        if 1 <= choice_num <= len(model_files):
+                            selected_model_path = f"./models/{model_files[choice_num - 1]}"
+                            break
+                        elif choice_num == len(model_files) + 1:
+                            selected_model_path = "./models/best_model.zip" 
+                            break
+                        else:
+                            print("Invalid selection. Please try again.")
+                    except ValueError:
+                        print("Invalid input. Please enter a number.")
+
+                # Always ask for number of flowers, regardless of model choice
+                num_flowers_val = None
+                while True: # Loop to ensure valid num_flowers input
+                    num_flowers_input = input(f"Enter number of flowers this model was trained with (e.g., 2, 4, 5, 8, 10): ").strip()
+                    try:
+                        num_flowers_val = int(num_flowers_input)
+                        if num_flowers_val <= 0:
+                            print("Error: Number of flowers must be a positive integer.")
+                            continue
+                        break # Exit loop if input is valid
+                    except ValueError:
+                        print("Error: Invalid number of flowers. Please enter a valid integer.")
+                        
+                print(f"Testing model: {os.path.basename(selected_model_path)} with {num_flowers_val} flowers (with 3D visualization)")
+                subprocess.run([PYTHON_PATH, "train.py", "4", selected_model_path, str(num_flowers_val)])
             else:
                 print("No trained models found in models/ directory.")
                 print("Please train a model first (options 2 or 3).")

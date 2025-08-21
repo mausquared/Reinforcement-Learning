@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+
 """
 3D Complex Hummingbird PPO Training Script with Matplotlib Visualization
 """
@@ -446,7 +446,8 @@ def create_training_analysis_plots(stats, model_name):
     # plt.show() can be re-enabled if you want to see plots interactively.
 
 
-def test_trained_model_3d_matplotlib(model_path, num_episodes=10, render=True):
+# Modified function signature
+def test_trained_model_3d_matplotlib(model_path, num_episodes=3, render=True, num_flowers_override=None):
     """Test a trained model in the 3D matplotlib environment."""
     
     print(f"🐦 Testing trained 3D matplotlib model: {model_path}")
@@ -454,14 +455,8 @@ def test_trained_model_3d_matplotlib(model_path, num_episodes=10, render=True):
     # Load the model
     model = PPO.load(model_path)
     
-    # Create test environment with rendering
-    env = ComplexHummingbird3DMatplotlibEnv(
-        grid_size=10,
-        num_flowers=5,
-        max_energy=100,
-        max_height=8,
-        render_mode="matplotlib" if render else None
-    )
+    # Create test environment with rendering, using the override for num_flowers
+    env = create_environment_for_model(model_path, render_mode="matplotlib" if render else None, num_flowers_override=num_flowers_override)
     
     episode_rewards = []
     episode_lengths = []
@@ -547,16 +542,30 @@ def get_model_environment_version(model_path):
     return 'legacy'
 
 
-def create_environment_for_model(model_path, render_mode=None):
+# Modified function signature
+def create_environment_for_model(model_path, render_mode=None, num_flowers_override=None):
     """Create the appropriate environment version for evaluating a specific model."""
     env_version = get_model_environment_version(model_path)
     
+    # Determine the number of flowers to use
+    num_flowers_to_use = num_flowers_override
+    if num_flowers_to_use is None:
+        # Fallback to a default if no override is provided
+        # Current training environment uses 5 flowers (create_3d_matplotlib_env)
+        # However, the original `create_environment_for_model` hardcoded 8.
+        # Let's use 5 as the default for consistency with `create_3d_matplotlib_env`
+        # or 8 if it's an older model that might have used that.
+        # For simplicity, let's stick to the current training default (5) if no override.
+        num_flowers_to_use = 5 # Default if not overridden
+    
+    print(f"   📊 Using environment with {num_flowers_to_use} flowers.")
+
     if env_version == 'autonomous':
         # Use current autonomous learning environment
         print(f"   📊 Using AUTONOMOUS LEARNING environment (minimal rewards)")
         return ComplexHummingbird3DMatplotlibEnv(
             grid_size=10,
-            num_flowers=8,
+            num_flowers=num_flowers_to_use, # Use the determined number of flowers
             max_energy=100,
             max_height=8,
             render_mode=render_mode
@@ -570,7 +579,7 @@ def create_environment_for_model(model_path, render_mode=None):
         # but clearly mark the results as incompatible
         return ComplexHummingbird3DMatplotlibEnv(
             grid_size=10,
-            num_flowers=8,
+            num_flowers=num_flowers_to_use, # Use the determined number of flowers
             max_energy=100,
             max_height=8,
             render_mode=render_mode
@@ -593,7 +602,7 @@ def evaluate_model_comprehensive(model_path, num_episodes=100, render=False):
         print(f"❌ Failed to load model: {e}")
         return [], [], [], 0
     
-    # Create appropriate environment
+    # Create appropriate environment (no num_flowers_override here, uses default logic in create_environment_for_model)
     env = create_environment_for_model(model_path, render_mode=None if not render else 'human')
     
     # Compatibility warning
@@ -809,6 +818,10 @@ def evaluate_all_models(show_plots=False):
         print(f"\n🤖 Evaluating: {model_file} ({env_version.upper()} environment)")
         
         try:
+            # Note: evaluate_model_comprehensive does not take num_flowers_override directly.
+            # It relies on create_environment_for_model's default logic.
+            # If you need to evaluate all models against specific flower counts,
+            # this function would need a more complex loop or argument.
             rewards, lengths, nectars, survival_count = evaluate_model_comprehensive(model_path, num_episodes=50, render=False)
             
             model_stats = {
@@ -1266,8 +1279,8 @@ def main():
         print("  1 - Train new model (500K timesteps)")
         print("  2 - Train new model (1M timesteps)")
         print("  custom <timesteps> - Train new model (custom timesteps)")
-        print("  3 - Test best model (3 episodes, with visualization)")
-        print("  4 - Test specific model (provide path)")
+        print("  3 - Test best model (3 episodes, with visualization) - DEPRECATED, USE 4")
+        print("  4 <model_path> [num_flowers] - Test specific model (provide path and optional num_flowers)")
         print("  5 - Comprehensive evaluation (100 episodes, no visualization)")
         print("  6 - Evaluate all models and compare")
         print("  progress - View training progress from saved statistics")
@@ -1299,13 +1312,25 @@ def main():
             print("Error: Invalid timesteps number. Please provide a valid integer.")
             return
     elif action == "3":
-        test_trained_model_3d_matplotlib("./models/best_model", render=True)
+        # Deprecated action 3, now handled by action 4 with default best_model.zip
+        print("Action 3 is deprecated. Use 'python train.py 4 ./models/best_model.zip [num_flowers]' instead.")
+        test_trained_model_3d_matplotlib("./models/best_model", render=True) # Kept for backward compatibility if directly called
     elif action == "4":
         if len(sys.argv) < 3:
             print("Please provide model path")
             return
         model_path = sys.argv[2]
-        test_trained_model_3d_matplotlib(model_path, render=True)
+        test_num_flowers = None # Default to None
+        if len(sys.argv) >= 4: # Check if num_flowers is provided as a 4th argument
+            try:
+                test_num_flowers = int(sys.argv[3])
+                if test_num_flowers <= 0:
+                    print("Error: Number of flowers must be a positive integer.")
+                    return
+            except ValueError:
+                print("Error: Invalid number of flowers. Please provide a valid integer.")
+                return
+        test_trained_model_3d_matplotlib(model_path, render=True, num_flowers_override=test_num_flowers)
     elif action == "5":
         if len(sys.argv) < 3:
             print("Please provide model path")
