@@ -1,138 +1,167 @@
-"""
-🔬 Detailed Model Evaluation Script
-------------------------------------
-This script performs a rigorous, statistical evaluation of a single trained model.
-It runs a model for multiple sets of episodes (e.g., 10 runs of 100 episodes)
-to gather robust performance metrics and assess the consistency of the agent's strategy.
-
-Usage:
-    python detailed_evaluation.py [path_to_model.zip]
-
-The script will output a formatted table with the following statistics:
-- Mean survival rate (%)
-- Standard deviation of the survival rate
-- Min/Max survival rates across runs
-- 95% Confidence Interval for the mean
-- A qualitative measure of consistency
-"""
-
 import os
 import sys
 import numpy as np
-import torch
-from stable_baselines3 import PPO
-from train import create_environment_for_model
+import matplotlib.pyplot as plt
 from scipy import stats
+from stable_baselines3 import PPO
+from stable_baselines3.common.env_util import make_vec_env
+from hummingbird_env import ComplexHummingbird3DMatplotlibEnv
 
 # --- Configuration ---
 NUM_RUNS = 10
 EPISODES_PER_RUN = 100
-SURVIVAL_THRESHOLD = 200  # Steps required to be considered a "survival"
+SURVIVAL_THRESHOLD = 300  # Steps required to be considered a "survival"
 
-def evaluate_survival_rate(model, env, num_episodes=100):
+def evaluate_model_stats(model, env, num_episodes=100):
     """
-    Evaluates the model for a given number of episodes and returns the survival rate.
+    Evaluates the model for a given number of episodes and returns detailed statistics.
     """
-    episode_lengths = []
-    for _ in range(num_episodes):
-        obs, _ = env.reset()
-        terminated = False
-        truncated = False
+    all_episode_lengths = []
+    all_nectar_collected = []
+    
+    # Reset the vectorized environment
+    obs = env.reset()
+    
+    for i in range(num_episodes):
+        terminated = [False]
+        truncated = [False]
         steps = 0
-        while not (terminated or truncated):
+        while not (terminated[0] or truncated[0]):
             action, _ = model.predict(obs, deterministic=True)
-            obs, _, terminated, truncated, info = env.step(action)
+            
+            # Corrected line to handle both old (4-value) and new (5-value) step returns
+            step_result = env.step(action)
+            if len(step_result) == 5:
+                obs, _, terminated, truncated, info = step_result
+            else: # Handle older gym versions
+                obs, _, done, info = step_result
+                terminated = done
+                truncated = [False] # Assume no truncation for older versions
+                
             steps += 1
-        # Use the 'steps' from the info dict if available, otherwise use the counter
-        episode_lengths.append(info.get('steps', steps))
         
-    survival_count = sum(1 for length in episode_lengths if length >= SURVIVAL_THRESHOLD)
-    survival_rate = (survival_count / num_episodes) * 100
-    return survival_rate
+        info_dict = info[0]
+        
+        all_episode_lengths.append(info_dict.get('steps', steps))
+        all_nectar_collected.append(info_dict.get('total_nectar_collected', 0))
+
+    return all_episode_lengths, all_nectar_collected
 
 def main(model_path):
-    """Main evaluation function."""
+    """Main statistical evaluation function."""
     if not os.path.exists(model_path):
         print(f"❌ Error: Model file not found at {model_path}")
         sys.exit(1)
-
-    print("🔬 Starting Detailed Evaluation...")
-    print(f"   Model: {os.path.basename(model_path)}")
-    print(f"   Runs: {NUM_RUNS} x {EPISODES_PER_RUN} episodes ({NUM_RUNS * EPISODES_PER_RUN} total)")
-    print("-" * 60)
-
-    # --- Environment Creation ---
-    # The create_environment_for_model function will automatically detect
-    # if the model is 'autonomous' or 'legacy' based on its filename and
-    # print the appropriate information.
-    env = create_environment_for_model(model_path)
+        
+    print("🔬 Starting Detailed Statistical Evaluation...")
+    print(f" Model: {os.path.basename(model_path)}")
+    print(f" Total Episodes: {NUM_RUNS * EPISODES_PER_RUN}")
     
-    # Load the model
     try:
-        device = "cuda" if torch.cuda.is_available() else "cpu"
-        model = PPO.load(model_path, env=env, device=device)
-        print(f"   Model loaded successfully on '{device}' device.")
+        model = PPO.load(model_path)
     except Exception as e:
         print(f"❌ Error loading model: {e}")
-        env.close()
         sys.exit(1)
 
-    survival_rates = []
-    print("\nRunning evaluations...")
+    obs_space = model.observation_space
+    if 'flowers' in obs_space.spaces:
+        num_flowers_from_model = obs_space.spaces['flowers'].shape[0]
+        print(f"📊 Using environment configuration with {num_flowers_from_model} flowers from the trained model.")
+        
+        eval_env = make_vec_env(
+            ComplexHummingbird3DMatplotlibEnv,
+            n_envs=1,
+            env_kwargs=dict(num_flowers=num_flowers_from_model)
+        )
+    else:
+        print("⚠️ Warning: Could not detect the number of flowers from the model's observation space.")
+        print("Falling back to default environment settings (5 flowers).")
+        eval_env = make_vec_env(ComplexHummingbird3DMatplotlibEnv, n_envs=1)
+    
+    all_survival_rates = []
+    all_episode_lengths = []
+    all_nectar_collected = []
+    
+    print("\nRunning evaluation episodes...")
     for i in range(NUM_RUNS):
-        print(f"   Run {i + 1}/{NUM_RUNS}... ", end="", flush=True)
-        rate = evaluate_survival_rate(model, env, EPISODES_PER_RUN)
-        survival_rates.append(rate)
-        print(f"Survival: {rate:.1f}%")
+        print(f"🔄 Run {i+1}/{NUM_RUNS}...")
+        lengths, nectar = evaluate_model_stats(model, eval_env, num_episodes=EPISODES_PER_RUN)
+        
+        survival_count = sum(1 for length in lengths if length >= SURVIVAL_THRESHOLD)
+        survival_rate = (survival_count / EPISODES_PER_RUN) * 100
+        
+        all_survival_rates.append(survival_rate)
+        all_episode_lengths.extend(lengths)
+        all_nectar_collected.extend(nectar)
 
-    env.close()
+    eval_env.close()
 
     # --- Statistical Analysis ---
-    mean_survival = np.mean(survival_rates)
-    std_survival = np.std(survival_rates)
-    min_survival = np.min(survival_rates)
-    max_survival = np.max(survival_rates)
+    mean_survival_rate = np.mean(all_survival_rates)
+    std_dev_survival = np.std(all_survival_rates)
+    confidence_interval = stats.t.interval(0.95, len(all_survival_rates)-1, loc=mean_survival_rate, scale=stats.sem(all_survival_rates))
     
-    # 95% Confidence Interval
-    if std_survival > 0 and len(survival_rates) > 1:
-        ci = stats.t.interval(0.95, len(survival_rates)-1, loc=mean_survival, scale=stats.sem(survival_rates))
-        ci_str = f"{ci[0]:.1f}-{ci[1]:.1f}%"
+    mean_nectar = np.mean(all_nectar_collected)
+    std_dev_nectar = np.std(all_nectar_collected)
+    
+    if np.std(all_episode_lengths) > 0 and np.std(all_nectar_collected) > 0:
+        correlation = np.corrcoef(all_episode_lengths, all_nectar_collected)[0, 1]
     else:
-        ci_str = "N/A"
+        correlation = "Not applicable (no variance in data)"
 
-    # Consistency Score
-    if std_survival < 3.0:
-        consistency = "High"
-    elif std_survival < 6.0:
-        consistency = "Variable"
-    else:
-        consistency = "Low"
-
-    # --- Display Results ---
-    model_name = os.path.basename(model_path).replace('.zip', '')
+    # --- Output Results ---
+    print("\n" + "="*40)
+    print("📊 Comprehensive Statistical Report")
+    print("="*40)
     
-    print("\n" + "=" * 120)
-    print("🏆 DETAILED EVALUATION RESULTS")
-    print("=" * 120)
-    header = f"{'Rank':<5}{'Model':<45}{'Mean%':<8}{'±Std':<8}{'Min%':<8}{'Max%':<8}{'95% CI':<13}{'Consist':<9}{'Episodes':<10}"
-    print(header)
-    print("-" * 120)
+    print("🎯 Survival Rate Analysis:")
+    print(f"  Mean Survival Rate: {mean_survival_rate:.2f}%")
+    print(f"  Standard Deviation: {std_dev_survival:.2f}%")
+    print(f"  95% Confidence Interval: ({confidence_interval[0]:.2f}%, {confidence_interval[1]:.2f}%)")
     
-    row = (f"{'1':<5}"
-           f"{model_name:<45}"
-           f"{mean_survival:<8.1f}"
-           f"{'±' + str(round(std_survival, 1)):<8}"
-           f"{min_survival:<8.1f}"
-           f"{max_survival:<8.1f}"
-           f"{ci_str:<13}"
-           f"{consistency:<9}"
-           f"{NUM_RUNS * EPISODES_PER_RUN:<10}")
-    print(row)
-    print("-" * 120)
+    print("\n🍯 Nectar Collection Analysis:")
+    print(f"  Mean Nectar Collected: {mean_nectar:.2f}")
+    print(f"  Standard Deviation: {std_dev_nectar:.2f}")
 
+    print("\n🔗 Behavioral Correlation:")
+    print(f"  Correlation (Length vs. Nectar): {correlation}")
+    if isinstance(correlation, (float, int)):
+        if abs(correlation) > 0.5:
+            print("  This suggests a strong relationship between survival time and nectar collection.")
+        elif abs(correlation) > 0.2:
+            print("  This suggests a moderate relationship.")
+        else:
+            print("  This suggests a weak relationship.")
+    
+    base_save_path = os.path.join(os.path.dirname(model_path), f"evaluation_plots_{os.path.basename(model_path).replace('.zip', '')}")
+    os.makedirs(base_save_path, exist_ok=True)
+    
+    plt.figure(figsize=(10, 6))
+    plt.hist(all_episode_lengths, bins=50, color='skyblue', edgecolor='black')
+    plt.title('Distribution of Episode Lengths')
+    plt.xlabel('Steps Survived')
+    plt.ylabel('Frequency')
+    plt.grid(True, alpha=0.5)
+    plt.savefig(os.path.join(base_save_path, 'episode_length_histogram.png'))
+    plt.close()
+    print("\n✅ Saved plot: episode_length_histogram.png")
+
+    plt.figure(figsize=(10, 6))
+    plt.hist(all_nectar_collected, bins=20, color='coral', edgecolor='black')
+    plt.title('Distribution of Nectar Collected per Episode')
+    plt.xlabel('Total Nectar Collected')
+    plt.ylabel('Frequency')
+    plt.grid(True, alpha=0.5)
+    plt.savefig(os.path.join(base_save_path, 'nectar_collection_histogram.png'))
+    plt.close()
+    print("✅ Saved plot: nectar_collection_histogram.png")
+    
+    print("\nComplete! The full statistical report and plots are saved.")
 
 if __name__ == "__main__":
-    if len(sys.argv) < 2:
+    if len(sys.argv) != 2:
         print("Usage: python detailed_evaluation.py [path_to_model.zip]")
-    else:
-        main(sys.argv[1])
+        sys.exit(1)
+    
+    model_path = sys.argv[1]
+    main(model_path)
