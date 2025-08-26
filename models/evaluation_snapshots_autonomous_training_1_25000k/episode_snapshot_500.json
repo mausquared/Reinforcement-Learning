@@ -1,0 +1,16 @@
+{
+    "step": 82,
+    "action": 5,
+    "reward": -0.009999999776482582,
+    "position": [
+        null,
+        null,
+        null
+    ],
+    "energy": -50.00000000000005,
+    "nectar_collected": 0.0,
+    "path_length": 0.0,
+    "unique_tiles": 0,
+    "unique_flowers": 0,
+    "flower_visits": {}
+}

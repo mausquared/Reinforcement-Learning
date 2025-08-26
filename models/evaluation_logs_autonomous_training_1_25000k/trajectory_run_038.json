@@ -1,0 +1,6602 @@
+[
+    {
+        "step": 1,
+        "action": 2,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            5.0,
+            4.0
+        ],
+        "energy": 99.70000457763672,
+        "nectar_collected": 0.0,
+        "path_length": 1.0,
+        "unique_tiles": 1,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 2,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            6.0,
+            4.0
+        ],
+        "energy": 99.40000915527344,
+        "nectar_collected": 0.0,
+        "path_length": 2.0,
+        "unique_tiles": 2,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 3,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            7.0,
+            4.0
+        ],
+        "energy": 99.10001373291016,
+        "nectar_collected": 0.0,
+        "path_length": 3.0,
+        "unique_tiles": 3,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 4,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            8.0,
+            4.0
+        ],
+        "energy": 98.80001831054688,
+        "nectar_collected": 0.0,
+        "path_length": 4.0,
+        "unique_tiles": 4,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 5,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 98.5000228881836,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 6,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 98.20002746582031,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 7,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 97.90003204345703,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 8,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 97.60003662109375,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 9,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 97.30004119873047,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 10,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 97.00004577636719,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 11,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 96.7000503540039,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 12,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 96.40005493164062,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 13,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 96.10005950927734,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 14,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 95.80006408691406,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 15,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 95.50006866455078,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 16,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 95.2000732421875,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 17,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 94.90007781982422,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 18,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 94.60008239746094,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 19,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 94.30008697509766,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 20,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 94.00009155273438,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 21,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 93.7000961303711,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 22,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 93.40010070800781,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 23,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 93.10010528564453,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 24,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 92.80010986328125,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 25,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 92.50011444091797,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 26,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 92.20011901855469,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 27,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 91.9001235961914,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 28,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 91.60012817382812,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 29,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 91.30013275146484,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 30,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 91.00013732910156,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 31,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 90.70014190673828,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 32,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 90.400146484375,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 33,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 90.10015106201172,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 34,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 89.80015563964844,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 35,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 89.50016021728516,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 36,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 89.20016479492188,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 37,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 88.9001693725586,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 38,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 88.60017395019531,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 39,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 88.30017852783203,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 40,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 88.00018310546875,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 41,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 87.70018768310547,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 42,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 87.40019226074219,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 43,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 87.1001968383789,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 44,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 86.80020141601562,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 45,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 86.50020599365234,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 46,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 86.20021057128906,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 47,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 85.90021514892578,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 48,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 85.6002197265625,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 49,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 85.30022430419922,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 50,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 85.00022888183594,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 51,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 84.70023345947266,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 52,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 84.40023803710938,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 53,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 84.1002426147461,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 54,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 83.80024719238281,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 55,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 83.50025177001953,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 56,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 83.20025634765625,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 57,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 82.90026092529297,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 58,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 82.60026550292969,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 59,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 82.3002700805664,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 60,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 82.00027465820312,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 61,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 81.70027923583984,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 62,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 81.40028381347656,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 63,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 81.10028839111328,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 64,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 80.80029296875,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 65,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 80.50029754638672,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 66,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 80.20030212402344,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 67,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 79.90030670166016,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 68,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 79.60031127929688,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 69,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 79.3003158569336,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 70,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 79.00032043457031,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 71,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 78.70032501220703,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 72,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 78.40032958984375,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 73,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 78.10033416748047,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 74,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 77.80033874511719,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 75,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 77.5003433227539,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 76,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 77.20034790039062,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 77,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 76.90035247802734,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 78,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 76.60035705566406,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 79,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 76.30036163330078,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 80,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 76.0003662109375,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 81,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 75.70037078857422,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 82,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 75.40037536621094,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 83,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 75.10037994384766,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 84,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 74.80038452148438,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 85,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 74.5003890991211,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 86,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 74.20039367675781,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 87,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 73.90039825439453,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 88,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 73.60040283203125,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 89,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 73.30040740966797,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 90,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 73.00041198730469,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 91,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 72.7004165649414,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 92,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 72.40042114257812,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 93,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 72.10042572021484,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 94,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 71.80043029785156,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 95,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 71.50043487548828,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 96,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 71.200439453125,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 97,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 70.90044403076172,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 98,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 70.60044860839844,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 99,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 70.30045318603516,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 100,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 70.00045776367188,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 101,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 69.7004623413086,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 102,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 69.40046691894531,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 103,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 69.10047149658203,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 104,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 68.80047607421875,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 105,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 68.50048065185547,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 106,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 68.20048522949219,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 107,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 67.9004898071289,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 108,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 67.60049438476562,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 109,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 67.30049896240234,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 110,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 67.00050354003906,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 111,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 66.70050811767578,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 112,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 66.4005126953125,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 113,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 66.10051727294922,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 114,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 65.80052185058594,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 115,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 65.50052642822266,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 116,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 65.20053100585938,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 117,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 64.9005355834961,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 118,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 64.60054016113281,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 119,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 64.30054473876953,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 120,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 64.00054931640625,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 121,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 63.7005500793457,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 122,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 63.400550842285156,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 123,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 63.10055160522461,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 124,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 62.80055236816406,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 125,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 62.500553131103516,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 126,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 62.20055389404297,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 127,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 61.90055465698242,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 128,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 61.600555419921875,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 129,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 61.30055618286133,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 130,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 61.00055694580078,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 131,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 60.700557708740234,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 132,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 60.40055847167969,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 133,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 60.10055923461914,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 134,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 59.800559997558594,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 135,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 59.50056076049805,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 136,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 59.2005615234375,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 137,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 58.90056228637695,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 138,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 58.600563049316406,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 139,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 58.30056381225586,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 140,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 58.00056457519531,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 141,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 57.700565338134766,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 142,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 57.40056610107422,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 143,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 57.10056686401367,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 144,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 56.800567626953125,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 145,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 56.50056838989258,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 146,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 56.20056915283203,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 147,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 55.900569915771484,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 148,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 55.60057067871094,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 149,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 55.30057144165039,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 150,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 55.000572204589844,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 151,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 54.7005729675293,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 152,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 54.40057373046875,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 153,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 54.1005744934082,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 154,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 53.800575256347656,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 155,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 53.50057601928711,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 156,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 53.20057678222656,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 157,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 52.900577545166016,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 158,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 52.60057830810547,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 159,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 52.30057907104492,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 160,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 52.000579833984375,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 161,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 51.70058059692383,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 162,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 51.40058135986328,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 163,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 51.100582122802734,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 164,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 50.80058288574219,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 165,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 50.50058364868164,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 166,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 50.200584411621094,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 167,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 49.90058517456055,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 168,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 49.6005859375,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 169,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 49.30058670043945,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 170,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 49.000587463378906,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 171,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 48.70058822631836,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 172,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 48.40058898925781,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 173,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 48.100589752197266,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 174,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 47.80059051513672,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 175,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 47.50059127807617,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 176,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 47.200592041015625,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 177,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 46.90059280395508,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 178,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 46.60059356689453,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 179,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 46.300594329833984,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 180,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 46.00059509277344,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 181,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 45.70059585571289,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 182,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 45.400596618652344,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 183,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 45.1005973815918,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 184,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 44.80059814453125,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 185,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 44.5005989074707,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 186,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 44.200599670410156,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 187,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 43.90060043334961,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 188,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 43.60060119628906,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 189,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 43.300601959228516,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 190,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 43.00060272216797,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 191,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 42.70060348510742,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 192,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 42.400604248046875,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 193,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 42.10060501098633,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 194,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 41.80060577392578,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 195,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 41.500606536865234,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 196,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 41.20060729980469,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 197,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 40.90060806274414,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 198,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 40.600608825683594,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 199,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 40.30060958862305,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 200,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 40.0006103515625,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 201,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 39.70061111450195,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 202,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 39.400611877441406,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 203,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 39.10061264038086,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 204,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 38.80061340332031,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 205,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 38.500614166259766,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 206,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 38.20061492919922,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 207,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 37.90061569213867,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 208,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 37.600616455078125,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 209,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 37.30061721801758,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 210,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 37.00061798095703,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 211,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 36.700618743896484,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 212,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 36.40061950683594,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 213,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 36.10062026977539,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 214,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 35.800621032714844,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 215,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 35.5006217956543,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 216,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 35.20062255859375,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 217,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 34.9006233215332,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 218,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 34.600624084472656,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 219,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 34.30062484741211,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 220,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 34.00062561035156,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 221,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 33.700626373291016,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 222,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 33.40062713623047,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 223,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 33.10062789916992,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 224,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 32.800628662109375,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 225,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 32.50062942504883,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 226,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 32.20063018798828,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 227,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 31.900630950927734,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 228,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 31.600629806518555,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 229,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 31.300628662109375,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 230,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 31.000627517700195,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 231,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 30.700626373291016,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 232,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 30.400625228881836,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 233,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 30.100624084472656,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 234,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 29.800622940063477,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 235,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 29.500621795654297,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 236,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 29.200620651245117,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 237,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 28.900619506835938,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 238,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 28.600618362426758,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 239,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 28.300617218017578,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 240,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 28.0006160736084,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 241,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 27.70061492919922,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 242,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 27.40061378479004,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 243,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 27.10061264038086,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 244,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 26.80061149597168,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 245,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 26.5006103515625,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 246,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 26.20060920715332,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 247,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 25.90060806274414,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 248,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 25.60060691833496,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 249,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 25.30060577392578,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 250,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 25.0006046295166,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 251,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 24.700603485107422,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 252,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 24.400602340698242,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 253,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 24.100601196289062,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 254,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 23.800600051879883,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 255,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 23.500598907470703,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 256,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 23.200597763061523,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 257,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 22.900596618652344,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 258,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 22.600595474243164,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 259,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 22.300594329833984,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 260,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 22.000593185424805,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 261,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 21.700592041015625,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 262,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 21.400590896606445,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 263,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 21.100589752197266,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 264,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 20.800588607788086,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 265,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 20.500587463378906,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 266,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 20.200586318969727,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 267,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 19.900585174560547,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 268,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 19.600584030151367,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 269,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 19.300582885742188,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 270,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 19.000581741333008,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 271,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 18.700580596923828,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 272,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 18.40057945251465,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 273,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 18.10057830810547,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 274,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 17.80057716369629,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 275,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 17.50057601928711,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 276,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 17.20057487487793,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 277,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 16.90057373046875,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 278,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 16.60057258605957,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 279,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 16.30057144165039,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 280,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 16.00057029724121,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 281,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 15.700570106506348,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 282,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 15.400569915771484,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 283,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 15.100569725036621,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 284,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 14.800569534301758,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 285,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 14.500569343566895,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 286,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 14.200569152832031,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 287,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 13.900568962097168,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 288,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 13.600568771362305,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 289,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 13.300568580627441,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 290,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 13.000568389892578,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 291,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 12.700568199157715,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 292,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 12.400568008422852,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 293,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 12.100567817687988,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 294,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 11.800567626953125,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 295,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 11.500567436218262,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 296,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 11.200567245483398,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 297,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 10.900567054748535,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 298,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 10.600566864013672,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 299,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            4.0,
+            9.0,
+            4.0
+        ],
+        "energy": 10.300566673278809,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    },
+    {
+        "step": 300,
+        "action": 0,
+        "reward": 0.10000000149011612,
+        "position": [
+            5.0,
+            5.0,
+            4.0
+        ],
+        "energy": 10.000566482543945,
+        "nectar_collected": 0.0,
+        "path_length": 5.0,
+        "unique_tiles": 5,
+        "unique_flowers": 0,
+        "flower_visits": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+        }
+    }
+]
