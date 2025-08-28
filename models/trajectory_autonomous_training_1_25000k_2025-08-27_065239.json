@@ -1,0 +1,12 @@
+{
+  "model": "autonomous_training_1_25000k",
+  "model_path": "C:\\Users\\Mauritius\\Desktop\\Projects\\Reinforcement-Learning\\models\\autonomous_training_1_25000k.zip",
+  "saved_at": "2025-08-27_065239",
+  "steps": 300,
+  "seed": null,
+  "stochastic": false,
+  "num_flowers": null,
+  "format": "png",
+  "dpi": 200,
+  "matplotlib_backend": "TkAgg"
+}

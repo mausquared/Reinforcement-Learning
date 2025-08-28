@@ -1,0 +1,41 @@
+{
+  "model": "autonomous_training_1_25000k",
+  "model_path": "models\\autonomous_training_1_25000k.zip",
+  "saved_at": "2025-08-27_082219",
+  "steps": 300,
+  "seed": null,
+  "stochastic": true,
+  "num_flowers": 5,
+  "flower_visits": {
+    "0": [],
+    "1": [
+      199
+    ],
+    "2": [
+      43,
+      44,
+      169,
+      287,
+      289,
+      291
+    ],
+    "3": [
+      137,
+      138,
+      141,
+      142,
+      143,
+      146
+    ],
+    "4": [
+      12,
+      237,
+      241,
+      245,
+      246
+    ]
+  },
+  "format": "png",
+  "dpi": 200,
+  "matplotlib_backend": "TkAgg"
+}

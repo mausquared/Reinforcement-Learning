@@ -1,0 +1,8 @@
+action_index,action_name,count
+0,forward (north),54
+1,backward (south),50
+2,left (west),52
+3,right (east),43
+4,up,44
+5,down,43
+6,hover,14

@@ -1,0 +1,23 @@
+Action frequency summary (total steps = 300)
+
+ 0  forward (north)               54  ( 18.0%)
+ 1  backward (south)              50  ( 16.7%)
+ 2  left (west)                   52  ( 17.3%)
+ 3  right (east)                  43  ( 14.3%)
+ 4  up                            44  ( 14.7%)
+ 5  down                          43  ( 14.3%)
+ 6  hover                         14  (  4.7%)
+
+Movement steps (0-5): 286 ( 95.3%)
+Hover steps (6):       14 (  4.7%)
+
+Action entropy: 2.730 bits
+
+Energy & nectar statistics (from episode log):
+ mean_energy = 80.03
+ min_energy  = 40.90
+ final_energy = 66.60
+ mean_nearest_flower_distance = 2.079
+ final_nectar_collected = 212.69998168945312
+ feed_events (positive nectar increases) = 18
+ total_nectar_gained = 212.69998168945312
