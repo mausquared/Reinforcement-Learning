@@ -1,0 +1,7 @@
+factor,max_energy,survival_pct,mean_nectar,median_steps,q1_steps,q3_steps,min_steps,max_steps,died_count,ways_to_end
+0.25,25,10.0,15.781996765136718,27.0,26.0,36.0,26,300,45,"{'energy_depletion': 45, 'time_limit': 5, 'other': 0}"
+0.5,50,12.0,27.433997535705565,79.0,52.0,109.75,51,300,44,"{'energy_depletion': 44, 'time_limit': 6, 'other': 0}"
+0.75,75,32.0,46.04599769592285,146.0,76.25,264.25,76,300,38,"{'energy_depletion': 38, 'time_limit': 12, 'other': 0}"
+1.0,100,52.0,64.693991355896,211.0,156.25,300.0,101,300,33,"{'energy_depletion': 33, 'time_limit': 17, 'other': 0}"
+1.25,125,60.0,64.83999290466309,256.5,130.25,300.0,126,300,28,"{'energy_depletion': 28, 'time_limit': 22, 'other': 0}"
+1.5,150,76.0,64.76599243164063,300.0,203.25,300.0,141,300,22,"{'energy_depletion': 22, 'time_limit': 28, 'other': 0}"
